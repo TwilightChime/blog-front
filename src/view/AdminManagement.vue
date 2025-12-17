@@ -1,10 +1,10 @@
 <template>
-    <el-container style="color:antiquewhite;">
+    <el-container>
         <el-header>
-            <div class="toggle-button" @click="toggleCollapse">|||
+            <div style="cursor: pointer;" @click="toggleCollapse">|||
             </div>
             <div>
-                <span>博客后台管理系统</span>
+                <span>BlogManagementAdmin</span>
             </div>
             <!-- <div class="loginInfo">
                 <el-avatar :src="userInfo.avatar"></el-avatar>
@@ -16,9 +16,10 @@
         </el-header>
         <el-container>
             <el-aside style="height: 100vh; width: 200px">
-                <el-menu style="background-color:antiquewhite"
+                <el-menu style="background-color:#d7e3fa"
                     :default-active="activePath"
                     @select="handMenuSelect"
+                    :collapse="isCollapse"
                     active-text-color="#409FFF">
                     <!--            一级菜单-->
                     <el-menu-item :index="item.path" v-for="item in menulist" :key="item.id">
@@ -63,10 +64,10 @@ const handMenuSelect = ref(
     }
 )
 // 监听路由变化
-router.afterEach((to) => {
-    currentRoute.value = to;
-    activePath.value = to.path;  // 根据路由路径更新选中菜单
-});
+// router.afterEach((to) => {
+//     currentRoute.value = to;
+//     activePath.value = to.path;  // 根据路由路径更新选中菜单
+// });
 // export default {
 //     data() {
 //         return {
