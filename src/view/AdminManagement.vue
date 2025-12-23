@@ -6,6 +6,8 @@
             <div>
                 <span>BlogManagementAdmin</span>
             </div>
+            <login></login>
+            <register></register>
             <!-- <div class="loginInfo">
                 <el-avatar :src="userInfo.avatar"></el-avatar>
                 <div class="user-option">
@@ -38,7 +40,11 @@
 <script setup>
 import router from '@/router'
 import { ref } from 'vue'
-    
+import { useCounterStore } from '../stores/counter'
+import login from '../components/auth/login.vue'
+import register from '@/components/auth/register.vue'
+
+const stores = useCounterStore()
 const menulist = ref([
     {id: 0, path: '/admin/index', authName: '后台首页'},
     {id: 1, path: '/admin/blogs', authName: '博客管理'},
@@ -56,6 +62,8 @@ const isCollapse = ref(false)
 const activePath = ref('')
 const toggleCollapse = ref(() => {
     isCollapse.value = !isCollapse.value
+    stores.isLoginVisible = !stores.isLoginVisible
+    // stores.isRegisterVisble = !stores.isRegisterVisble
 })
 const handMenuSelect = ref(
     (index) => {

@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2025-12-17 17:37:29
+ * @LastEditTime: 2025-12-22 18:31:57
  * @FilePath: \blog-front\src\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -30,6 +30,8 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { blogApi } from '@/api/blog'
+import { useCounterStore } from '@/stores/counter';
+const stores = useCounterStore()
 
     const queryBlog = ref({
         title: "",
@@ -55,6 +57,8 @@ import { blogApi } from '@/api/blog'
         queryBlog.value.title = ''
         type.value = ''
         getBlogList()
+        stores.isLoginVisible=true
+        console.log(stores.isLoginVisible)
     }
 
     onMounted(() => {
