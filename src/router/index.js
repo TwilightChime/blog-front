@@ -17,19 +17,21 @@ const Register = () => import('../components/auth/register.vue')
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {},
     {
       path: '/',
       component: AdminManagement,
       children: [
         {
           path: '/admin/index',
-          component: Index
-        },{
+          component: Index,
+        },
+        {
           path: '/admin/blogs',
-          component: Blog
-        }
-      ]
-    }
+          component: Blog,
+        },
+      ],
+    },
   ],
 })
 
