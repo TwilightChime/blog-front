@@ -61,7 +61,7 @@ let user = {
   avatar: '',
   email: '423523234@qq.com',
   password: '',
-  type: 0,
+  type: 1,
   loginProvince: '四川省',
   loginCity: '成都市',
   loginLat: 34.27,
