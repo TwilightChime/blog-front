@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-19 09:50:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2025-12-25 11:48:06
+ * @LastEditTime: 2025-12-26 16:17:32
  * @FilePath: \blog-front\src\api\auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -26,7 +26,8 @@ export const authApi = {
       console.log(res)
       console.log(Promise.resolve(res))
       ElMessage.success('success')
-      stores.hideAllDialog()
+      stores.hideLoginDialog()
+      stores.hideRegisterDialog()
       return Promise.resolve(res)
     } catch (error) {
       return Promise.reject(error)
