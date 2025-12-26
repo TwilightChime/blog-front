@@ -68,19 +68,11 @@ import { computed, reactive, ref, watch } from 'vue'
 import { authApi } from '../../api/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
+
 const stores = useCounterStore()
-const dialogVisible = computed({
-  get: () => {
-    stores.showLoginDialog()
-  },
-  set: (value) => {
-    if (!value) {
-      stores.hideAllDialog()
-    }
-  },
-})
 const loading = ref(false)
 const loginFormRef = ref()
+
 const loginForm = reactive({
   username: localStorage.getItem('rememberedUsername') || '',
   password: '',
@@ -94,6 +86,20 @@ let user = {
   loginLat: 34.27,
   loginLng: 108.08, //经度
 }
+
+const dialogVisible = computed({
+  get: () => {
+    return stores.isLoginVisible
+  },
+  set: (value) => {
+    if (!value) {
+      stores.hideLoginDialog()
+    } else {
+      stores.showLoginDialog()
+    }
+  },
+})
+
 const loginRules = {
   username: [
     { required: true, message: 'inputusername', trigger: 'blur' },
@@ -104,6 +110,7 @@ const loginRules = {
     { min: 5, max: 20, message: 'lengthofPassword is 5-20char', trigger: 'blur' },
   ],
 }
+
 const handleLogin = async () => {
   if (!loginFormRef.value) return
   const valid = await loginFormRef.value.validate()
@@ -141,7 +148,7 @@ const handleForgetPassword = () => {
 }
 
 const switchToRegister = () => {
-  stores.hideAllDialog()
+  stores.hideLoginDialog()
   stores.showRegisterDialog()
 }
 

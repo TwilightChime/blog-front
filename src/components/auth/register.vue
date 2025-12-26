@@ -42,24 +42,19 @@
   </el-dialog>
 </template>
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { User, Lock, Message, Iphone, Key } from '@element-plus/icons-vue'
 import { useCounterStore } from '@/stores/counter'
 import { authApi } from '@/api/auth'
 
+const registerFormRef = ref()
+const loading = ref(false)
 const stores = useCounterStore()
-const dialogVisible = computed({
-  get: () => stores.isRegisterVisble,
-  set: (value) => {
-    if (!value) {
-      stores.hideAllDialog()
-    }
-  },
-})
 const registerForm = reactive({
   username: '',
   password: '',
 })
+
 let user = {
   username: '',
   nickname: 'safsdd',
@@ -72,8 +67,20 @@ let user = {
   loginLat: 34.27,
   loginLng: 108.08, //经度
 }
-const registerFormRef = ref()
-const loading = ref(false)
+
+const dialogVisible = computed({
+  get: () => {
+    return stores.isRegisterVisible
+  },
+  set: (value) => {
+    if (!value) {
+      stores.hideRegisterDialog()
+    } else {
+      stores.showRegisterDialog()
+    }
+  },
+})
+
 const registerRules = {
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -107,9 +114,28 @@ const handleRegister = async () => {
     loading.value = false
   }
 }
+
 const resetForm = () => {
   if (registerFormRef.value) {
     registerFormRef.value.resetFields()
   }
 }
+
+const handleClose = (done) => {
+  if (loading.value) {
+    ElMessage.warning('registering, wait a few')
+    return
+  }
+  resetForm()
+  done()
+}
+
+watch(dialogVisible, (visible) => {
+  if (visible && registerFormRef.value) {
+    // 对话框显示时重置表单
+    setTimeout(() => {
+      resetForm()
+    }, 0)
+  }
+})
 </script>
