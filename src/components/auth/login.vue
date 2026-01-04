@@ -63,9 +63,9 @@
   </el-dialog>
 </template>
 <script setup>
-import { useCounterStore } from '../../stores/counter'
+import { useCounterStore } from '@/stores/counter'
 import { computed, reactive, ref, watch } from 'vue'
-import { authApi } from '../../api/auth'
+import { authApi } from '@/api/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
 

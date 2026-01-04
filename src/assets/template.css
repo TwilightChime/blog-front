@@ -1,0 +1,67 @@
+header {
+  /* 布局 */
+  display: flex;                /* 内部Flex布局 */
+  justify-content: space-between; /* 内容左右分布 */
+  align-items: center;          /* 垂直居中 */
+  
+  /* 尺寸与位置 */
+  height: 60px;                 /* 固定高度 */
+  width: 100%;                  /* 全宽 */
+  position: sticky;             /* 粘性定位 */
+  top: 0;                       /* 固定在顶部 */
+  z-index: 1000;                /* 确保在最上层 */
+  
+  /* 间距 */
+  padding: 0 20px;              /* 左右内边距 */
+}
+
+main {
+  /* 布局 */
+  flex: 1;                      /* 占据剩余所有空间 */
+  
+  /* 尺寸与约束 */
+  width: 100%;
+  max-width: 1200px;            /* 最大宽度限制 */
+  margin: 0 auto;               /* 水平居中 */
+  
+  /* 间距 */
+  padding: 20px;                /* 内边距 */
+  margin-top: 20px;             /* 与header的间距 */
+  margin-bottom: 40px;          /* 与footer的间距 */
+}
+
+footer {
+  /* 布局 */
+  display: flex;
+  justify-content: center;      /* 内容居中 */
+  align-items: center;
+  
+  /* 尺寸 */
+  width: 100%;
+  min-height: 80px;             /* 最小高度 */
+  
+  /* 间距 */
+  padding: 20px 0;
+  margin-top: auto;             /* 自动推到最底部 */
+}
+
+/* 通用间距属性 */
+.element {
+  /* 外边距 */
+  margin: 0;                    /* 重置 */
+  margin-top: 10px;
+  margin-right: 15px;
+  margin-bottom: 20px;
+  margin-left: 15px;
+  margin: 10px 15px;            /* 上下10px 左右15px */
+  margin: 10px 15px 20px 15px;  /* 上右下左 */
+  
+  /* 内边距 */
+  padding: 0;
+  padding-top: 10px;
+  padding: 10px 15px;
+  padding: 10px 15px 20px 15px;
+  
+  /* 现代间距属性 */
+  gap: 10px;                    /* Flex/Grid子项间距 */
+}

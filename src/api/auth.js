@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-19 09:50:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2025-12-26 16:17:32
+ * @LastEditTime: 2025-12-29 16:05:38
  * @FilePath: \blog-front\src\api\auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,15 +19,16 @@ export const authApi = {
       const user = res.data.data.user
       const stores = useCounterStore()
       if (token) {
-        stores.token = token
         setToken(token)
       }
-      stores.userInfo = user
-      console.log(res)
-      console.log(Promise.resolve(res))
-      ElMessage.success('success')
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user))
+        sessionStorage.setItem('user', JSON.stringify(user))
+        stores.userInfo = user
+      }
       stores.hideLoginDialog()
       stores.hideRegisterDialog()
+      ElMessage.success('success')
       return Promise.resolve(res)
     } catch (error) {
       return Promise.reject(error)
