@@ -12,4 +12,8 @@ export const tagApi = {
   getTagList() {
     return request.get('/admin/getFullTagList')
   },
+
+  delBlogTag(tag) {
+    return request.get(`/admin/dealDeletedTag/${tag.id}`)
+  }
 }

@@ -2,14 +2,14 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-04 08:56:59
+ * @LastEditTime: 2026-01-08 18:18:54
  * @FilePath: \blog-front\src\components\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div>
     <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/admin' }"></el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/admin' }">Index</el-breadcrumb-item>
       <el-breadcrumb-item>blogmanagement</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
@@ -59,11 +59,11 @@
         <el-table-column label="Tag" prop="tags">
           <template #default="props">
             <el-tag
-              size="medium"
+              size="small"
               v-for="(tag, i) in props.row.tags"
               :key="tag.id"
               closable
-              @close="tagClose(i, props.row)"
+              @close="tagDel(i, props.row)"
             >
               {{ tag.name }}
             </el-tag>
@@ -73,12 +73,12 @@
               class="input-new-tag"
               v-if="props.row.tagInputVisible"
               v-model="props.row.tagInputValue"
-              ref="saveTagInput"
+              ref="tagInputRef"
               @keyup.enter.native="tagInputConfirm(props.row)"
               @blur="tagInputConfirm(props.row)"
             >
             </el-input>
-            <el-button v-else size="mini" class="button-new-tag" @click="tagShowInput(props.row)"
+            <el-button v-else size="small" class="button-new-tag" @click="tagShowInput(props.row)"
               >+ New Tag
             </el-button>
           </template>
@@ -117,12 +117,13 @@
   </div>
 </template>
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { nextTick, onMounted, reactive, ref } from 'vue'
 import { blogApi } from '@/api/blog'
 import { tagApi } from '@/api/tagApi'
 import { useCounterStore } from '@/stores/counter'
 import { Check, Delete, Edit, Message, Search, Star } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus';
+import router from '@/router'
 const stores = useCounterStore()
 
 const queryBlog = reactive({
@@ -135,6 +136,7 @@ const totalCount = ref(0)
 const blogsList = ref([])
 const type = ref('')
 const tagList = ref([])
+const tagInputRef = ref(null)
 
 const getBlogList = async () => {
   const res = await blogApi.getBlogList({
@@ -143,7 +145,6 @@ const getBlogList = async () => {
     pagenum: pageNum.value,
     pagesize: pageSize.value,
   })
-  console.log(res)
   blogsList.value = res.data.data.content
   totalCount.value = res.data.data.totalElements
 }
@@ -167,14 +168,36 @@ onMounted(() => {
   getFullTagList()
 })
 
+const tagDel = async (i, row) => {
+  const tag = row.tags[i]
+  row.tags.splice(i, 1)
+  row.tagIds = row.tags.map(item => {
+    return item.id
+  }).toString().replace(/\[|]/g, '');
+  const {data: res} = await tagApi.tagUpdateBlog(row)
+  if(res.code === 200){
+    const {data: res2} = await tagApi.delBlogTag(tag)
+    if(res2.flag === true){
+      return ElMessage.success('修改博客标签成功')
+    }else{
+      ElMessage.error('修改博客标签失败')
+    }
+  }
+}
+
 const tagInputConfirm = async (row) => {
-  if (row.tagInputValue.trim().length === 0) {
+  if ((row.tagInputValue || '').trim().length === 0) {
     row.tagInputValue = ''
     row.tagInputVisible = false
     return
   }
-  const newTag = tagList.value.find((item) => item.name === row.tagInputValue.trim())
-  if (newTag !== undefined) {
+  const newTag = tagList.value.find((item) => item.name === row.tagInputValue.trim()) || ''
+  if (newTag !== '') {
+    if(row.tags.find((item) => item.name === newTag.name)){
+      row.tagInputValue = ''
+      row.tagInputVisible = false
+      return ElMessage.error('标签已存在.')
+    }
     row.tags.push(newTag)
     row.tagIds = row.tags
       .map((item) => {
@@ -184,16 +207,20 @@ const tagInputConfirm = async (row) => {
       .replace(/\[|]/g, '')
     console.log(row)
     const {data: res} = await tagApi.tagUpdateBlog(row)
-    if (res.data === true) {
+    if (res.flag === true) {
       row.tagInputValue = ''
       row.tagInputVisible = false
+      getFullTagList()
       return ElMessage.success('修改博客标签成功！')
     } else {
       ElMessage.error('修改博客标签失败！')
     }
   } else {
     const {data: res1} = await tagApi.createTag(row.tagInputValue.trim())
-    if (res1.data == null) {
+    console.log('完整响应:', res1)
+    console.log('res.data类型:', typeof res1.data)
+    console.log('res.data值:', res1.data)
+    if (res1.data === null) {
       ElMessage.error('修改博客标签失败！')
     } else {
       row.tags.push(res1.data)
@@ -204,9 +231,10 @@ const tagInputConfirm = async (row) => {
         .toString()
         .replace(/\[|]/g, '')
       const {data: res2} = await tagApi.tagUpdateBlog(row)
-      if (res2.data === true) {
+      if (res2.flag === true) {
         row.tagInputValue = ''
         row.tagInputVisible = false
+        getFullTagList()
         return ElMessage.success('修改博客标签成功！')
       } else {
         ElMessage.error('修改博客标签失败！')
@@ -217,6 +245,19 @@ const tagInputConfirm = async (row) => {
 
 const tagShowInput = (row) => {
   row.tagInputVisible = true
+  nextTick(() => {
+    tagInputRef.value.input.focus()
+  })
+}
+
+const editBlogById = (row) => {
+  console.log(row)
+  router.push({
+    path:  '/admin/blog-input',
+    query: {
+      blog: row
+    }
+  })
 }
 
 const pageSizeChange = (newValue) => {

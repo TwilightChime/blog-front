@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-09 13:42:18
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2025-12-24 18:09:30
+ * @LastEditTime: 2026-01-09 15:37:46
  * @FilePath: \blog-front\src\main.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,6 +14,8 @@ import router from './router'
 import './assets/global.css'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 
 
 const app = createApp(App)
@@ -21,5 +23,6 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(ElementPlus)
+app.use(mavonEditor)
 
 app.mount('#app')
