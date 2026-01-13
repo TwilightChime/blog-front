@@ -72,12 +72,13 @@
 </template>
 
 <script setup>
-import router from '@/router'
 import { House, Notebook, User, EditPen, Collection, CollectionTag, MessageBox, Mug, Files, Avatar, Picture, Setting, SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { computed, reactive, ref } from 'vue'
+import { useRouter } from 'vue-router';
 import { useCounterStore } from '../stores/counter'
-
+const router = useRouter()
 const stores = useCounterStore()
+
 const menuList = [
   { id: 0, path: '/admin/index', authName: 'Index', icon: House},
   { id: 1, path: '/admin/blogs', authName: 'Blog', icon: Notebook},

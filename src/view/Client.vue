@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-18 09:24:01
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2025-12-29 16:43:47
+ * @LastEditTime: 2026-01-13 10:03:27
  * @FilePath: \blog-front\src\view\Client.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -134,13 +134,13 @@ const accessAdmin = () => {
 
 <script setup>
 import { ref, computed } from 'vue'
-import router from '@/router'
 import { ElementPlus, User, Setting, SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useCounterStore } from '@/stores/counter'
 import Login from '@/components/auth/Login.vue'
 import Register from '@/components/auth/Register.vue'
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const activeIndex = ref('1')
 const stores = useCounterStore()
 
