@@ -16,7 +16,7 @@ export const blogApi = {
     return request.post('/admin/blogs', {blog: data})
   },
 
-  delBlog(row){
-    return request.get(`/admin/blogs/${row.id}/delete`)
+  delBlog(data){
+    return request.get(`/admin/blogs/${data}/delete`)
   }
 }

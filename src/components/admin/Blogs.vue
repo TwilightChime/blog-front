@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-13 10:32:43
+ * @LastEditTime: 2026-01-14 16:27:58
  * @FilePath: \blog-front\src\components\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -23,7 +23,7 @@
         <el-table-column prop="title" label="1"></el-table-column>
         <el-table-column prop="content"></el-table-column>
       </el-table> -->
-      <el-table :data="blogsList" style="width: 100%">
+      <el-table :data="blogsList" style="width: 100%" stripe>
         <el-table-column type="expand">
           <template #default="props">
             <div>
@@ -122,7 +122,7 @@ import { blogApi } from '@/api/blog'
 import { tagApi } from '@/api/tagApi'
 import { useCounterStore } from '@/stores/counter'
 import { Check, Delete, Edit, Message, Search, Star } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRouter } from 'vue-router'
 const stores = useCounterStore()
 const router = useRouter()
@@ -156,7 +156,6 @@ const clearSearch = () => {
   type.value = ''
   getBlogList()
   stores.isLoginVisible = true
-  console.log(stores.isLoginVisible)
 }
 
 const getFullTagList = async () => {
@@ -258,6 +257,26 @@ const editBlogById = (row) => {
     query: {
       blog: JSON.stringify(row)
     }
+  })
+}
+
+const removeBlogById = (id) => {
+  ElMessageBox.confirm(
+    'Delete the blog forever, continue?',
+    'warning',
+    {
+      confirmButtonText: 'confirm',
+      cancelButtonText: 'cancel',
+      type: 'warning'
+    }
+  ).then(async () => {
+    const {data: res} = await blogApi.delBlog(id)
+    if(res.code === 200){
+      getBlogList()
+      ElMessage.success('delete blog success')
+    }
+  }).catch(() => {
+    ElMessage.info('canceled delete')
   })
 }
 

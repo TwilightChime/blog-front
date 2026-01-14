@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-29 09:59:47
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-13 18:19:59
+ * @LastEditTime: 2026-01-14 15:32:59
  * @FilePath: \blog-front\src\components\admin\BlogComposition.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -43,18 +43,18 @@
           </el-select>
         </el-form-item>
         <el-form-item label="blog firstPicture">
-          <el-upload ref="upload" action="http://localhost:8090/upload" list-type="picture-card" :limit="1" 
+          <el-upload ref="upLoad" action="http://localhost:8090/upload" list-type="picture-card" :limit="1" 
             :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSucess">
             <i class="el-icon-plus"></i>  
           </el-upload>
           <el-dialog v-model="dialogImgVisible">
-            <img src="" alt="blog picture">  
+            <img width="100%" :src="dialogImageUrl" alt="blog picture">  
           </el-dialog>
         </el-form-item>
       </el-form>
       <div>
-        <el-button>cancel</el-button>
-        <el-button>publishBlog</el-button>  
+        <el-button @click="cancelPublish">cancel</el-button>
+        <el-button @click="publishBlog" type="primary">publishBlog</el-button>  
       </div>
     </el-dialog>
   </div>
@@ -67,6 +67,7 @@ import { ElMessage } from 'element-plus'
 import { tagApi } from '@/api/tagApi'
 import { typeApi } from '@/api/typeApi'
 import { useRoute, useRouter } from 'vue-router'
+import { useCounterStore } from '@/stores/counter'
 const route = useRoute()
 const router = useRouter()
 
@@ -103,6 +104,8 @@ const flags = ref([
 const tagList = ref([])
 const typeList = ref([])
 const dialogImgVisible = ref(false)
+const publishFormRef = ref()
+const upLoad = ref()
 
 const publishBtn = async () => {
   if (blog.id !== null) {
@@ -120,6 +123,31 @@ const publishBtn = async () => {
     tagList.value = resTag.data
     typeList.value = resType.data
     publishDialogVisible.value = true
+  }
+}
+
+const cancelPublish = () => {
+  upLoad.value.clearFiles()
+  blog.firstPicture = ''
+  publishDialogVisible.value = false
+  publishFormRef.value.resetFields()
+}
+
+const publishBlog = async() => {
+  if (!publishFormRef.value) return
+  const valid = await publishFormRef.value.validate()
+  if(!valid) return
+  blog.firstPicture = dialogImageUrl
+  blog.tagIds = publishForm.tags.toString().replace(/\[|]/g, '')
+  blog.flag = publishForm.flag
+  blog.user = useCounterStore().userInfo
+  const {data: res} = await blogApi.getBlog(blog)
+  if(res.code == 200) {
+    publishDialogVisible.value = false
+    return ElMessage.success('publishSucess')
+  }else{
+    publishDialogVisible.value = false
+    return ElMessage.error('publishFault')
   }
 }
 
