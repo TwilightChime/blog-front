@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-29 16:56:39
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-14 18:31:27
+ * @LastEditTime: 2026-01-15 16:52:34
  * @FilePath: \blog-front\src\components\admin\Categories.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,7 +13,7 @@
       <el-breadcrumb-item>分类管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card shadow="never">
-      <el-button type="primary" @click="createType">新建分类</el-button>
+      <el-button type="primary" @click="dialogTypeFormVisible = true">新建分类</el-button>
       <el-table :data="typeList" border stripe>
         <el-table-column type="index"></el-table-column>
         <el-table-column label="图片" prop="pic_url" width="150px">
@@ -38,7 +38,7 @@
         </el-form-item>
         <el-form-item label="封面图片">
           <el-upload
-            ref="upload"
+            ref="upLoad"
             action="http://localhost:8090/upload"
             list-type="picture-card"
             :limit="1"
@@ -63,16 +63,82 @@
 </template>
 <script setup>
 import { typeApi } from '@/api/typeApi';
-import { onMounted, ref } from 'vue';
-
+import { ElMessage } from 'element-plus';
+import { onMounted, reactive, ref } from 'vue';
 
 const typeList = ref([])
+const dialogTypeFormVisible = ref(false)
+const dialogTypeForm = reactive({name: ''})
+const dialogTypeFormRules = {name: [{require: true, message: 'type not null', trigger: 'blur'}]}
+const fileList = ref([])
+const dialogImgVisible = ref(false)
+let dialogImgUrl = ''
+let type = {id: null, name: '', pic_url: ''}
+const dialogTypeFormRef = ref()
+const upLoad = ref()
 
 const getTypeList = async() => {
   const {data: res} = await typeApi.getTypeList()
   typeList.value = res.data
 }
+
+const editTypeDialog = (row) => {
+  Object.assign(type, row)
+  fileList.value = [{name: type.pic_url, url: type.pic_url}]
+  dialogTypeForm.name = type.name
+  dialogTypeFormVisible.value = true
+}
+
+const removeType = async (row) => {
+  const {data: res} = await typeApi.delType(row)
+  if(res.code === 200) {
+    dialogTypeFormVisible.value = false
+    getTypeList()
+    return ElMessage.success(res.message)
+  }
+}
+
+const handleRemove = () => {
+  dialogImgUrl = ''
+}
+
+const handlePictureCardPreview = (file) => {
+  dialogImgUrl = file.url;
+  dialogImgVisible.value = true;
+}
+
+const handleSuccess = (res) => {
+  dialogImgUrl = res.data
+}
+
+const cancelEdit = () => {
+  upLoad.value.clearFiles()
+  type.pic_url = ''
+  type.name = ''
+  type.id = null
+  dialogTypeFormVisible.value = false
+  dialogTypeForm.name = ''
+  dialogTypeFormRef.value.resetFields()
+}
+
+const commitType = async () => {
+  if(!dialogTypeFormRef.value) return
+  const valid = dialogTypeFormRef.value.validate()
+  if(!valid) return
+  type.name = dialogTypeForm.name
+  type.pic_url = dialogImgUrl
+  const {data: res} = await typeApi.updataType(type)
+  if(res.code === 200) {
+    dialogTypeFormVisible.value = false
+    getTypeList()
+    return ElMessage.success(res.message)
+  }else {
+    dialogTypeFormVisible.value = false
+    return ElMessage.error(res.message)
+  }
+}
+
 onMounted(() => {
-  getTypeList
+  getTypeList()
 })
 </script>
