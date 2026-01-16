@@ -1,18 +1,6 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    title="register"
-    width="500px"
-    :before-close="handleClose"
-    destroy-on-close
-  >
-    <el-form
-      ref="registerFormRef"
-      :model="registerForm"
-      :ruler="registerRules"
-      label-width="100px"
-      status-icon
-    >
+  <el-dialog v-model="dialogVisible" title="register" width="500px" :before-close="handleClose" destroy-on-close>
+    <el-form ref="registerFormRef" :model="registerForm" :ruler="registerRules" label-width="100px" status-icon>
       <el-form-item label="username" prop="username">
         <el-input v-model="registerForm.username" palaceholder="username(3-20)" clearable>
           <template #prefix>
@@ -21,13 +9,7 @@
         </el-input>
       </el-form-item>
       <el-form-item label="password" prop="password">
-        <el-input
-          v-model="registerForm.password"
-          type="password"
-          placeholder="password(5-20)"
-          show-password
-          clearable
-        >
+        <el-input v-model="registerForm.password" type="password" placeholder="password(5-20)" show-password clearable>
           <template #prefix>
             <el-icon><Lock></Lock></el-icon>
           </template>

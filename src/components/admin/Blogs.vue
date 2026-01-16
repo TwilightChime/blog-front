@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-14 16:27:58
+ * @LastEditTime: 2026-01-16 09:34:59
  * @FilePath: \blog-front\src\components\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -87,18 +87,8 @@
         <el-table-column label="UpdateTime" prop="updateTime"></el-table-column>
         <el-table-column label="Edit">
           <template #default="props">
-            <el-button
-              type="primary"
-              :icon="Edit"
-              circle
-              @click="editBlogById(props.row)"
-            ></el-button>
-            <el-button
-              type="danger"
-              :icon="Delete"
-              circle
-              @click="removeBlogById(props.row.id)"
-            ></el-button>
+            <el-button type="primary" :icon="Edit" circle @click="editBlogById(props.row)"></el-button>
+            <el-button type="danger" :icon="Delete" circle @click="removeBlogById(props.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -1,39 +1,15 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    title="login"
-    width="400px"
-    :before-close="handleClose"
-    destroy-on-close
-  >
-    <el-form
-      ref="loginFormRef"
-      :model="loginForm"
-      :rules="loginRules"
-      label-width="80px"
-      status-icon
-    >
+  <el-dialog v-model="dialogVisible" title="login" width="400px" :before-close="handleClose" destroy-on-close>
+    <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" label-width="80px" status-icon>
       <el-form-item label="user" prop="username">
-        <el-input
-          v-model="loginForm.username"
-          placeholder="username"
-          clearable
-          @keyup.enter="handleLogin"
-        >
+        <el-input v-model="loginForm.username" placeholder="username" clearable @keyup.enter="handleLogin">
           <template #prefix>
             <el-icon><User></User></el-icon>
           </template>
         </el-input>
       </el-form-item>
       <el-form-item label="password" prop="password">
-        <el-input
-          v-model="loginForm.password"
-          type="password"
-          placeholder="password"
-          show-password
-          clearable
-          @keyup.enter="handleLogin"
-        >
+        <el-input v-model="loginForm.password" type="password" placeholder="password" show-password clearable @keyup.enter="handleLogin">
           <template #prefix>
             <el-icon><Lock></Lock></el-icon>
           </template>
@@ -41,13 +17,7 @@
       </el-form-item>
       <el-form-item>
         <el-checkbox v-model="loginForm.rememberMe">rememberMe</el-checkbox>
-        <el-link
-          type="primary"
-          @click="handleForgetPassword"
-          :underline="false"
-          style="float: right"
-          >forgotPassword</el-link
-        >
+        <el-link type="primary" @click="handleForgetPassword" :underline="false" style="float: right">forgotPassword</el-link>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :loading="loading" @click="handleLogin" style="width: 100%">
