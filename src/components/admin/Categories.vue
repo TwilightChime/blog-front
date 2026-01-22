@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-29 16:56:39
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-15 16:52:34
+ * @LastEditTime: 2026-01-20 18:08:20
  * @FilePath: \blog-front\src\components\admin\Categories.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -39,7 +39,7 @@
         <el-form-item label="封面图片">
           <el-upload
             ref="upLoad"
-            action="http://localhost:8090/upload"
+            action="http://localhost:8090/images/upload"
             list-type="picture-card"
             :limit="1"
             :file-list="fileList"
@@ -84,7 +84,7 @@ const getTypeList = async() => {
 
 const editTypeDialog = (row) => {
   Object.assign(type, row)
-  fileList.value = [{name: type.pic_url, url: type.pic_url}]
+  fileList.value = [{name: type.name, url: type.pic_url}]
   dialogTypeForm.name = type.name
   dialogTypeFormVisible.value = true
 }
@@ -109,6 +109,7 @@ const handlePictureCardPreview = (file) => {
 
 const handleSuccess = (res) => {
   dialogImgUrl = res.data
+  console.log(dialogImgUrl)
 }
 
 const cancelEdit = () => {

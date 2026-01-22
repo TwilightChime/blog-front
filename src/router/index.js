@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-09 13:42:18
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2025-12-29 18:22:39
+ * @LastEditTime: 2026-01-21 12:00:06
  * @FilePath: \blog-front\src\router\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -22,6 +22,7 @@ const AdminProjects = () => import('../components/admin/Projects.vue')
 const AdminArticles = () => import('../components/admin/Articles.vue')
 const Comments = () => import('../components/admin/Comments.vue')
 const AdminUsers = () => import('../components/admin/Users.vue')
+const Picture = () => import('../components/admin/Picture.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -81,6 +82,10 @@ const router = createRouter({
         {
           path: '/admin/administrator',
           component: Administrator,
+        },
+        {
+          path: '/admin/pictures',
+          component: Picture,
         }
       ],
     },
