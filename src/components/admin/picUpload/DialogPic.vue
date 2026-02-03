@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-22 17:58:31
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-22 18:35:08
+ * @LastEditTime: 2026-01-23 10:09:12
  * @FilePath: \blog-front\src\components\utils\DialogPic.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -50,7 +50,6 @@ const uploadHeaders = computed(() => {
   if(token) {
     headers['token'] = token
   }
-
   return headers
 })
 

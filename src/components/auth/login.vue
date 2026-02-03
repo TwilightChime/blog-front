@@ -118,14 +118,15 @@ const handleForgetPassword = () => {
 }
 
 const switchToRegister = () => {
+  resetForm()
   stores.hideLoginDialog()
   stores.showRegisterDialog()
 }
 
 const resetForm = () => {
-  loginForm.password = ''
   if (loginFormRef.value) {
     loginFormRef.value.resetFields()
+    console.log('reset')
   }
 }
 
@@ -138,11 +139,11 @@ const handleClose = (done) => {
   done()
 }
 
-watch(dialogVisible, (visible) => {
-  if (visible && loginFormRef.value) {
-    setTimeout(() => {
-      resetForm()
-    }, 0)
-  }
-})
+// watch(dialogVisible, (visible) => {
+//   if (visible && loginFormRef.value) {
+//     setTimeout(() => {
+//       resetForm()
+//     }, 0)
+//   }
+// })
 </script>

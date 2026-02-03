@@ -16,8 +16,12 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import * as echarts from 'echarts';
 
 const app = createApp(App)
+
+app.config.globalProperties.$echarts = echarts
+app.provide('echarts', echarts)
 
 app.use(createPinia())
 app.use(router)

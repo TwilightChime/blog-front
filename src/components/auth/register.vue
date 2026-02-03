@@ -28,6 +28,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { User, Lock, Message, Iphone, Key } from '@element-plus/icons-vue'
 import { useCounterStore } from '@/stores/counter'
 import { authApi } from '@/api/auth'
+import { ElMessage } from 'element-plus';
 
 const registerFormRef = ref()
 const loading = ref(false)
@@ -112,12 +113,12 @@ const handleClose = (done) => {
   done()
 }
 
-watch(dialogVisible, (visible) => {
-  if (visible && registerFormRef.value) {
-    // 对话框显示时重置表单
-    setTimeout(() => {
-      resetForm()
-    }, 0)
-  }
-})
+// watch(dialogVisible, (visible) => {
+//   if (visible && registerFormRef.value) {
+//     // 对话框显示时重置表单
+//     setTimeout(() => {
+//       resetForm()
+//     }, 0)
+//   }
+// })
 </script>

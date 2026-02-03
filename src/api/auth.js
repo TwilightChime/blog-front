@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-19 09:50:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-16 15:09:16
+ * @LastEditTime: 2026-02-03 17:06:32
  * @FilePath: \blog-front\src\api\auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -65,5 +65,9 @@ export const authApi = {
 
   delUser(data) {
     return request.get(`/admin/users/${data}/delete`)
+  },
+
+  getUserAreaList() {
+    return request.get('/admin/getUserAreaList')
   }
 }
