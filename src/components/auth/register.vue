@@ -1,6 +1,9 @@
 <template>
   <el-dialog v-model="dialogVisible" title="register" width="500px" :before-close="handleClose" destroy-on-close>
     <el-form ref="registerFormRef" :model="registerForm" :ruler="registerRules" label-width="100px" status-icon>
+      <el-form-item label="nickname" prop="nickname">
+        <el-input v-model="registerForm.nickname" clearable></el-input>
+      </el-form-item>
       <el-form-item label="username" prop="username">
         <el-input v-model="registerForm.username" palaceholder="username(3-20)" clearable>
           <template #prefix>
@@ -14,6 +17,12 @@
             <el-icon><Lock></Lock></el-icon>
           </template>
         </el-input>
+      </el-form-item>
+      <el-form-item label="email" prop="email">
+        <el-input v-model="registerForm.email" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="avatar" prop="avatar">
+        <el-upload></el-upload>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :loading="loading" @click="handleRegister" style="width: 100%">
@@ -34,8 +43,11 @@ const registerFormRef = ref()
 const loading = ref(false)
 const stores = useCounterStore()
 const registerForm = reactive({
+  nickname: '',
   username: '',
   password: '',
+  email: '',
+  avatar: '',
 })
 
 let user = {
@@ -44,7 +56,7 @@ let user = {
   avatar: '',
   email: '423523234@qq.com',
   password: '',
-  type: 1,
+  type: 0,
   loginProvince: '四川省',
   loginCity: '成都市',
   loginLat: 34.27,

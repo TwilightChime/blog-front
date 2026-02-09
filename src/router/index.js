@@ -2,10 +2,11 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-09 13:42:18
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-21 12:00:06
+ * @LastEditTime: 2026-02-09 17:25:47
  * @FilePath: \blog-front\src\router\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+import { useCounterStore } from '@/stores/counter'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const Client = () => import('../view/Client.vue')
@@ -41,6 +42,15 @@ const router = createRouter({
     {
       path: '/admin',
       component: AdminManagement,
+      beforeEnter: (to, from, next) => {
+        const userInfo = useCounterStore().userInfo
+        const token = useCounterStore().token
+        if(!userInfo || !token) return next('/index')
+        else {
+          if(userInfo.type !== '1') return next('/index')
+        }
+        next()
+      },
       redirect: '/admin/index',
       children: [
         {

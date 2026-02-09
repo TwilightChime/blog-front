@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-26 15:50:37
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-26 16:19:30
+ * @LastEditTime: 2026-02-05 17:20:06
  * @FilePath: \blog-front\src\components\admin\charts\CommentList.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -16,7 +16,7 @@
             <div style="display: flex; justify-content: space-between; width: 100%">
               <div class="nkname">
                 <span class="name">{{ props.row.nickname }} </span>
-                <span class="date">{{ props.row.createTime | dataFormat3 }}</span>
+                <span class="date">{{ props.row.createTime }}</span>
               </div>
             </div>
             <p class="reply">{{ props.row.content }}</p>
@@ -28,10 +28,11 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { commentApi } from '@/api/commentApi';
+import { onMounted, ref } from 'vue';
 
 let editing = false
-let commentlist = []
+const commentlist = ref([])
 let title = '最新评论'
 
 onMounted(() => {
@@ -39,13 +40,10 @@ onMounted(() => {
 })
 
 const getCommentList = async () => {
-  // const { data: res } = await this.$blog.get('/admin/getCommentList')
-  // // console.log(res)
-  // this.commentlist = res.data
+  const { data: res } = await commentApi.getCommentList()
+  commentlist.value = res.data
 }
 const deleteCommentById = async (id) => {
-  // const { data: res } = await this.$blog.get('/admin/deleteCommentById', {
-  //   params: id,
-  // })
+  const { data: res } = await commentApi.delComment()
 }
 </script>

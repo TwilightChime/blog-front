@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-11 16:51:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-21 11:59:01
+ * @LastEditTime: 2026-02-09 15:22:36
  * @FilePath: \blog-front\src\view\AdminManagement.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -50,13 +50,8 @@
             </div> -->
     </el-header>
     <el-container>
-      <el-aside style="height: 100vh; width: 200px">
-        <el-menu
-          style="background-color: #d7e3fa"
-          :default-active="activePath"
-          @select="handMenuSelect"
-          :collapse="isCollapse"
-        >
+      <el-aside class="admin-sidebar" :width="isCollapse ? '65px':'150px'">
+        <el-menu style="background-color: #4565a1;border: 0;" :default-active="activePath" @select="handMenuSelect" :collapse="isCollapse">
           <!--            一级菜单-->
           <el-menu-item :index="item.path" v-for="item in menuList" :key="item.id">
             <el-icon><component :is="item.icon"></component></el-icon>
@@ -154,6 +149,12 @@ const handleLogout = async () => {
       }
     }
   }
+}
+
+.admin-sidebar {
+  min-height: 100vh;
+  background-color: #4565a1;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .user-actions {

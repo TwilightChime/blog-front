@@ -20,10 +20,10 @@
         <el-table-column label="账号" prop="username"></el-table-column>
         <el-table-column label="邮箱" prop="email" min-width="100px"></el-table-column>
         <el-table-column label="注册时间" prop="createTime" min-width="100px">
-          <template #default="props">{{ props.row.createTime | dataFormat }}</template>
+          <template #default="props">{{ props.row.createTime }}</template>
         </el-table-column>
         <el-table-column label="最近登录" prop="loginTime">
-          <template #default="props">{{ props.row.lastLoginTime === null ? props.row.createTime : props.row.lastLoginTime | dataFormat3 }}</template>
+          <template #default="props">{{ props.row.lastLoginTime === null ? props.row.createTime : props.row.lastLoginTime }}</template>
         </el-table-column>
         <el-table-column label="地址">
           <template #default="props">{{ props.row.loginProvince + ' ' + props.row.loginCity }}</template>
