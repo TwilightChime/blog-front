@@ -11,6 +11,7 @@ import 'echarts/lib/component/visualMap'
 import { inject, onMounted, ref } from 'vue'
 import { authApi } from '@/api/auth'
 import { ElMessage } from 'element-plus'
+import { IMG } from '@/utils/constants'
 
 let allData = []
 let chartInstance = null
@@ -62,7 +63,7 @@ const initChart = async () => {
           if (!lt) continue
           html +=
             '<div style="display: flex;align-items: center"><img style="width: 18px;border-radius: 50%" src="' +
-            lt.avatar +
+            IMG.BASE_URL+lt.avatar +
             '"/><span style="font-size: x-small;margin-left: 5px">' +
             lt.nickname +
             '</span></div> '

@@ -2,13 +2,13 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-20 18:23:06
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-22 17:24:30
+ * @LastEditTime: 2026-02-12 11:59:06
  * @FilePath: \blog-front\src\components\admin\Picture.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div>
-    <el-upload class="upload-demo" drag action="http://localhost:8090/admin/images/upload" :headers="uploadHeaders" multiple>
+    <el-upload class="upload-demo" drag :action="IMG.UPLOAD_URL" :headers="uploadHeaders" multiple>
       <el-icon><UploadFilled /></el-icon>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       <div class="el-upload__tip" slot="tip">只能上传jpg/png/ico文件，且不超过50MB</div>
@@ -16,7 +16,7 @@
     <Waterfall :gap="20" :col="3" :list="pictureList">
       <template #default="{item, index}">
         <div style="width: 100%;height: 100%">
-          <LazyImg :url="item.src" />
+          <LazyImg :url="IMG.BASE_URL+item.src" />
           <span>{{item.name}}</span>
           <el-button size="small" type="danger" :icon="Delete" circle @click="delPicture(item, index)"></el-button>
         </div>
@@ -33,6 +33,7 @@ import { LazyImg, Waterfall } from 'vue-waterfall-plugin-next'
 import 'vue-waterfall-plugin-next/dist/style.css'
 import { ElMessage } from 'element-plus';
 import { useCounterStore } from '@/stores/counter';
+import { IMG } from '@/utils/constants';
 
 const pictureList = ref([])
 

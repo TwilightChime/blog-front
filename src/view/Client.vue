@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-18 09:24:01
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-13 10:03:27
+ * @LastEditTime: 2026-02-12 15:11:34
  * @FilePath: \blog-front\src\view\Client.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -75,7 +75,7 @@ const accessAdmin = () => {
           <template v-else>
             <el-dropdown @command="handleUserCommand">
               <div class="user-info">
-                <el-avatar :size="32" :src="userInfo.avatar" />
+                <el-avatar :size="32" :src="IMG.BASE_URL+userInfo.avatar" />
                 <span class="username">{{ username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </div>
@@ -140,6 +140,7 @@ import { useCounterStore } from '@/stores/counter'
 import Login from '@/components/auth/Login.vue'
 import Register from '@/components/auth/Register.vue'
 import { useRouter } from 'vue-router'
+import { IMG } from '@/utils/constants'
 const router = useRouter()
 const activeIndex = ref('1')
 const stores = useCounterStore()

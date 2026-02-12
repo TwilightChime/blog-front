@@ -13,7 +13,7 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column label="头像" prop="avatar" min-width="60px">
           <template #default="props">
-            <el-avatar :src="props.row.avatar"></el-avatar>
+            <el-avatar :src="IMG.BASE_URL+props.row.avatar"></el-avatar>
           </template>
         </el-table-column>
         <el-table-column label="昵称" prop="nickname"></el-table-column>
@@ -55,6 +55,7 @@ import { useCounterStore } from '@/stores/counter';
 import { Delete } from '@element-plus/icons-vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { onMounted, ref } from 'vue';
+import { IMG } from '@/utils/constants'
 
 const userList = ref([])
 const inputUser = ref('')

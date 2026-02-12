@@ -1,25 +1,29 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="register" width="500px" :before-close="handleClose" destroy-on-close>
-    <el-form ref="registerFormRef" :model="registerForm" :ruler="registerRules" label-width="100px" status-icon>
+  <el-dialog
+    v-model="dialogVisible"
+    title="register"
+    width="500px"
+    :before-close="handleClose"
+    destroy-on-close
+  >
+    <el-form
+      ref="registerFormRef"
+      :model="registerForm"
+      :ruler="registerRules"
+      label-width="100px"
+      status-icon
+    >
       <el-form-item label="nickname" prop="nickname">
-        <el-input v-model="registerForm.nickname" clearable></el-input>
+        <el-input v-model="registerForm.nickname" clearable :prefix-icon="User"></el-input>
       </el-form-item>
       <el-form-item label="username" prop="username">
-        <el-input v-model="registerForm.username" palaceholder="username(3-20)" clearable>
-          <template #prefix>
-            <el-icon><User></User></el-icon>
-          </template>
-        </el-input>
+        <el-input v-model="registerForm.username" palaceholder="username(3-20)" clearable :prefix-icon="User"></el-input>
       </el-form-item>
       <el-form-item label="password" prop="password">
-        <el-input v-model="registerForm.password" type="password" placeholder="password(5-20)" show-password clearable>
-          <template #prefix>
-            <el-icon><Lock></Lock></el-icon>
-          </template>
-        </el-input>
+        <el-input v-model="registerForm.password" type="password" placeholder="password(5-20)" show-password clearable :prefix-icon="Lock"></el-input>
       </el-form-item>
       <el-form-item label="email" prop="email">
-        <el-input v-model="registerForm.email" clearable></el-input>
+        <el-input v-model="registerForm.email" clearable :prefix-icon="Message"></el-input>
       </el-form-item>
       <el-form-item label="avatar" prop="avatar">
         <el-upload></el-upload>
@@ -37,7 +41,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { User, Lock, Message, Iphone, Key } from '@element-plus/icons-vue'
 import { useCounterStore } from '@/stores/counter'
 import { authApi } from '@/api/auth'
-import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus'
 
 const registerFormRef = ref()
 const loading = ref(false)
@@ -52,15 +56,15 @@ const registerForm = reactive({
 
 let user = {
   username: '',
-  nickname: 'safsdd',
+  nickname: '',
   avatar: '',
-  email: '423523234@qq.com',
+  email: '',
   password: '',
   type: 0,
-  loginProvince: '四川省',
-  loginCity: '成都市',
-  loginLat: 34.27,
-  loginLng: 108.08, //经度
+  loginProvince: '',
+  loginCity: '',
+  loginLat: 0,
+  loginLng: 0, //经度
 }
 
 const dialogVisible = computed({
@@ -99,8 +103,18 @@ const handleRegister = async () => {
 
   loading.value = true
   try {
-    user.username = registerForm.username
-    user.password = registerForm.password
+    // user.username = registerForm.username
+    // user.password = registerForm.password
+    await fetch('http://ip-api.com/json/?fields=country,regionName,city,lat,lon,query')
+      .then((res) => res.json())
+      .then((data) => {
+        user.loginProvince = data.regionName
+        user.loginCity = data.city
+        user.loginLat = data.lat
+        user.loginLng = data.lon
+      })
+    Object.assign(user, registerForm)
+    console.log(user)
     await authApi.register(user)
     resetForm()
   } catch (error) {

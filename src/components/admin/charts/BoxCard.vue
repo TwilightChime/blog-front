@@ -2,14 +2,14 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-26 15:50:37
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-05 11:56:14
+ * @LastEditTime: 2026-02-12 14:45:44
  * @FilePath: \blog-front\src\components\admin\charts\BoxCard.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <el-card class="box-card-component" style="margin-left: 8px; margin-top: 14px" shadow="hover">
     <div slot="header" class="box-card-header">
-      <img src="http://localhost:8090/uploads/93d8f36e-dbd5-48b0-bab0-3a145703efef..png" />
+      <img :src="IMG.BASE_URL+'93d8f36e-dbd5-48b0-bab0-3a145703efef..png'" />
     </div>
     <div style="position: relative">
       <div style="padding-top: 35px" class="progress-item">
@@ -32,7 +32,11 @@
   </el-card>
 </template>
 
-<script setup></script>
+<script setup>
+import { IMG } from '@/utils/constants';
+
+
+</script>
 
 <style scoped>
 .box-card-component {

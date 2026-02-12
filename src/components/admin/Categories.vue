@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-29 16:56:39
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-20 18:08:20
+ * @LastEditTime: 2026-02-12 18:18:08
  * @FilePath: \blog-front\src\components\admin\Categories.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -18,7 +18,7 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column label="图片" prop="pic_url" width="150px">
           <template #default="props">
-            <el-image :src="props.row.pic_url"></el-image>
+            <el-image :src="IMG.BASE_URL+props.row.pic_url"></el-image>
           </template>
         </el-table-column>
         <el-table-column label="分类名称" prop="name"></el-table-column>
@@ -39,13 +39,14 @@
         <el-form-item label="封面图片">
           <el-upload
             ref="upLoad"
-            action="http://localhost:8090/images/upload"
+            :action="IMG.UPLOAD_URL"
             list-type="picture-card"
             :limit="1"
             :file-list="fileList"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
             :on-success="handleSuccess"
+            :headers="uploadHeaders"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -64,7 +65,9 @@
 <script setup>
 import { typeApi } from '@/api/typeApi';
 import { ElMessage } from 'element-plus';
-import { onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
+import { IMG } from '@/utils/constants'
+import { useCounterStore } from '@/stores/counter';
 
 const typeList = ref([])
 const dialogTypeFormVisible = ref(false)
@@ -77,6 +80,10 @@ let type = {id: null, name: '', pic_url: ''}
 const dialogTypeFormRef = ref()
 const upLoad = ref()
 
+onMounted(() => {
+  getTypeList()
+})
+
 const getTypeList = async() => {
   const {data: res} = await typeApi.getTypeList()
   typeList.value = res.data
@@ -84,7 +91,7 @@ const getTypeList = async() => {
 
 const editTypeDialog = (row) => {
   Object.assign(type, row)
-  fileList.value = [{name: type.name, url: type.pic_url}]
+  fileList.value = [{name: type.name, url: IMG.BASE_URL+type.pic_url}]
   dialogTypeForm.name = type.name
   dialogTypeFormVisible.value = true
 }
@@ -108,8 +115,7 @@ const handlePictureCardPreview = (file) => {
 }
 
 const handleSuccess = (res) => {
-  dialogImgUrl = res.data
-  console.log(dialogImgUrl)
+  dialogImgUrl = IMG.BASE_URL+res.data
 }
 
 const cancelEdit = () => {
@@ -127,7 +133,7 @@ const commitType = async () => {
   const valid = dialogTypeFormRef.value.validate()
   if(!valid) return
   type.name = dialogTypeForm.name
-  type.pic_url = dialogImgUrl
+  type.pic_url = dialogImgUrl.split(IMG.BASE_URL).join("")
   const {data: res} = await typeApi.updataType(type)
   if(res.code === 200) {
     dialogTypeFormVisible.value = false
@@ -139,7 +145,15 @@ const commitType = async () => {
   }
 }
 
-onMounted(() => {
-  getTypeList()
+const uploadHeaders = computed(() => {
+  const token = useCounterStore().token
+  const headers = {
+    'X-Request-ID': Date.now().toString(36) + Math.random().toString(36).substr(2)
+  }
+  if(token) {
+    headers['token'] = token
+  }
+
+  return headers
 })
 </script>

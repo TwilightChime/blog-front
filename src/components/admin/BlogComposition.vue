@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-29 09:59:47
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-14 15:32:59
+ * @LastEditTime: 2026-02-12 14:25:52
  * @FilePath: \blog-front\src\components\admin\BlogComposition.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -43,12 +43,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="blog firstPicture">
-          <el-upload ref="upLoad" action="http://localhost:8090/upload" list-type="picture-card" :limit="1" 
+          <el-upload ref="upLoad" :action="IMG.UPLOAD_URL" list-type="picture-card" :limit="1" 
             :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSucess">
             <i class="el-icon-plus"></i>  
           </el-upload>
           <el-dialog v-model="dialogImgVisible">
-            <img width="100%" :src="dialogImageUrl" alt="blog picture">  
+            <img width="100%" :src="IMG.BASE_URL+dialogImageUrl" alt="blog picture">  
           </el-dialog>
         </el-form-item>
       </el-form>
@@ -68,6 +68,7 @@ import { tagApi } from '@/api/tagApi'
 import { typeApi } from '@/api/typeApi'
 import { useRoute, useRouter } from 'vue-router'
 import { useCounterStore } from '@/stores/counter'
+import { IMG } from '@/utils/constants'
 const route = useRoute()
 const router = useRouter()
 

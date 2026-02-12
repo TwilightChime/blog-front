@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-01-16 09:34:59
+ * @LastEditTime: 2026-02-12 15:06:39
  * @FilePath: \blog-front\src\components\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -26,32 +26,28 @@
       <el-table :data="blogsList" style="width: 100%" stripe>
         <el-table-column type="expand">
           <template #default="props">
-            <div>
-              <el-row :gutter="20">
-                <el-col :sm="12" :lg="8">
-                  <el-card>
-                    <div>
-                      <h1>
-                        BlogPicture
-                        <el-button
-                          :icon="Edit"
-                          type="primary"
-                          @click="editPic(props.row)"
-                          circle
-                        ></el-button>
-                      </h1>
-                      <el-image :src="props.row.firstPicture"></el-image>
-                    </div>
-                  </el-card>
-                </el-col>
-                <el-col :sm="12" :lg="8">
-                  <el-card>
-                    <h1>Description</h1>
-                    <div>{{ props.row.description }}</div>
-                  </el-card>
-                </el-col>
-              </el-row>
-            </div>
+            <el-row :gutter="20">
+              <el-col :sm="12" :lg="8">
+                <el-card>
+                  <h1>
+                    BlogPicture
+                    <el-button
+                      :icon="Edit"
+                      type="primary"
+                      @click="editPic(props.row)"
+                      circle
+                    ></el-button>
+                  </h1>
+                  <el-image :src="IMG.BASE_URL + props.row.firstPicture"></el-image>
+                </el-card>
+              </el-col>
+              <el-col :sm="12" :lg="8">
+                <el-card>
+                  <h1>Description</h1>
+                  <div>{{ props.row.description }}</div>
+                </el-card>
+              </el-col>
+            </el-row>
           </template>
         </el-table-column>
         <el-table-column label="Title" prop="title"> </el-table-column>
@@ -76,19 +72,28 @@
               ref="tagInputRef"
               @keyup.enter.native="tagInputConfirm(props.row)"
               @blur="tagInputConfirm(props.row)"
-            >
-            </el-input>
+            ></el-input>
             <el-button v-else size="small" class="button-new-tag" @click="tagShowInput(props.row)"
-              >+ New Tag
-            </el-button>
+              >+ New Tag</el-button
+            >
           </template>
         </el-table-column>
         <el-table-column label="CountView" prop="views"></el-table-column>
         <el-table-column label="UpdateTime" prop="updateTime"></el-table-column>
         <el-table-column label="Edit">
           <template #default="props">
-            <el-button type="primary" :icon="Edit" circle @click="editBlogById(props.row)"></el-button>
-            <el-button type="danger" :icon="Delete" circle @click="removeBlogById(props.row.id)"></el-button>
+            <el-button
+              type="primary"
+              :icon="Edit"
+              circle
+              @click="editBlogById(props.row)"
+            ></el-button>
+            <el-button
+              type="danger"
+              :icon="Delete"
+              circle
+              @click="removeBlogById(props.row.id)"
+            ></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -112,8 +117,9 @@ import { blogApi } from '@/api/blog'
 import { tagApi } from '@/api/tagApi'
 import { useCounterStore } from '@/stores/counter'
 import { Check, Delete, Edit, Message, Search, Star } from '@element-plus/icons-vue'
-import { ElMessage, ElMessageBox } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
+import { IMG } from '@/utils/constants'
 const stores = useCounterStore()
 const router = useRouter()
 
@@ -149,7 +155,7 @@ const clearSearch = () => {
 }
 
 const getFullTagList = async () => {
-  const {data: res} = await tagApi.getTagList()
+  const { data: res } = await tagApi.getTagList()
   tagList.value = res.data
 }
 
@@ -161,15 +167,18 @@ onMounted(() => {
 const tagDel = async (i, row) => {
   const tag = row.tags[i]
   row.tags.splice(i, 1)
-  row.tagIds = row.tags.map(item => {
-    return item.id
-  }).toString().replace(/\[|]/g, '');
-  const {data: res} = await tagApi.tagUpdateBlog(row)
-  if(res.code === 200){
-    const {data: res2} = await tagApi.delBlogTag(tag)
-    if(res2.flag === true){
+  row.tagIds = row.tags
+    .map((item) => {
+      return item.id
+    })
+    .toString()
+    .replace(/\[|]/g, '')
+  const { data: res } = await tagApi.tagUpdateBlog(row)
+  if (res.code === 200) {
+    const { data: res2 } = await tagApi.delBlogTag(tag)
+    if (res2.flag === true) {
       return ElMessage.success('修改博客标签成功')
-    }else{
+    } else {
       ElMessage.error('修改博客标签失败')
     }
   }
@@ -183,7 +192,7 @@ const tagInputConfirm = async (row) => {
   }
   const newTag = tagList.value.find((item) => item.name === row.tagInputValue.trim()) || ''
   if (newTag !== '') {
-    if(row.tags.find((item) => item.name === newTag.name)){
+    if (row.tags.find((item) => item.name === newTag.name)) {
       row.tagInputValue = ''
       row.tagInputVisible = false
       return ElMessage.error('标签已存在.')
@@ -196,7 +205,7 @@ const tagInputConfirm = async (row) => {
       .toString()
       .replace(/\[|]/g, '')
     console.log(row)
-    const {data: res} = await tagApi.tagUpdateBlog(row)
+    const { data: res } = await tagApi.tagUpdateBlog(row)
     if (res.flag === true) {
       row.tagInputValue = ''
       row.tagInputVisible = false
@@ -206,7 +215,7 @@ const tagInputConfirm = async (row) => {
       ElMessage.error('修改博客标签失败！')
     }
   } else {
-    const {data: res1} = await tagApi.createTag(row.tagInputValue.trim())
+    const { data: res1 } = await tagApi.createTag(row.tagInputValue.trim())
     console.log('完整响应:', res1)
     console.log('res.data类型:', typeof res1.data)
     console.log('res.data值:', res1.data)
@@ -220,7 +229,7 @@ const tagInputConfirm = async (row) => {
         })
         .toString()
         .replace(/\[|]/g, '')
-      const {data: res2} = await tagApi.tagUpdateBlog(row)
+      const { data: res2 } = await tagApi.tagUpdateBlog(row)
       if (res2.flag === true) {
         row.tagInputValue = ''
         row.tagInputVisible = false
@@ -243,31 +252,29 @@ const tagShowInput = (row) => {
 const editBlogById = (row) => {
   console.log(row)
   router.push({
-    path:  '/admin/blog-input',
+    path: '/admin/blog-input',
     query: {
-      blog: JSON.stringify(row)
-    }
+      blog: JSON.stringify(row),
+    },
   })
 }
 
 const removeBlogById = (id) => {
-  ElMessageBox.confirm(
-    'Delete the blog forever, continue?',
-    'warning',
-    {
-      confirmButtonText: 'confirm',
-      cancelButtonText: 'cancel',
-      type: 'warning'
-    }
-  ).then(async () => {
-    const {data: res} = await blogApi.delBlog(id)
-    if(res.code === 200){
-      getBlogList()
-      ElMessage.success('delete blog success')
-    }
-  }).catch(() => {
-    ElMessage.info('canceled delete')
+  ElMessageBox.confirm('Delete the blog forever, continue?', 'warning', {
+    confirmButtonText: 'confirm',
+    cancelButtonText: 'cancel',
+    type: 'warning',
   })
+    .then(async () => {
+      const { data: res } = await blogApi.delBlog(id)
+      if (res.code === 200) {
+        getBlogList()
+        ElMessage.success('delete blog success')
+      }
+    })
+    .catch(() => {
+      ElMessage.info('canceled delete')
+    })
 }
 
 const pageSizeChange = (newValue) => {
