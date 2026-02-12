@@ -153,7 +153,6 @@ const uploadHeaders = computed(() => {
   if(token) {
     headers['token'] = token
   }
-
   return headers
 })
 </script>
