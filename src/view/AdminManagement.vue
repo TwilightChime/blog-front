@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-11 16:51:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-12 15:13:52
+ * @LastEditTime: 2026-02-26 09:05:42
  * @FilePath: \blog-front\src\view\AdminManagement.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -21,7 +21,7 @@
         <template v-else>
           <el-dropdown @command="handleUserCommand">
             <div class="user-info">
-              <el-avatar :size="32" :src="IMG.BASE_URL+userInfo.avatar" />
+              <el-avatar :size="32" :src="IMG.AVATAR_URL+userInfo.avatar" />
               <span class="username">{{ username }}</span>
               <el-icon><ArrowDown /></el-icon>
             </div>

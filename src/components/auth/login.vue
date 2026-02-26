@@ -2,22 +2,21 @@
   <el-dialog v-model="dialogVisible" title="login" width="400px" :before-close="handleClose" destroy-on-close>
     <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" label-width="80px" status-icon>
       <el-form-item label="user" prop="username">
-        <el-input v-model="loginForm.username" placeholder="username" clearable @keyup.enter="handleLogin">
-          <template #prefix>
-            <el-icon><User></User></el-icon>
-          </template>
+        <el-input v-model="loginForm.username" placeholder="username" clearable @keyup.enter="handleLogin"
+          :prefix-icon="User">
+          <!-- <template #prefix><el-icon><User></User></el-icon></template> -->
         </el-input>
       </el-form-item>
       <el-form-item label="password" prop="password">
-        <el-input v-model="loginForm.password" type="password" placeholder="password" show-password clearable @keyup.enter="handleLogin">
-          <template #prefix>
-            <el-icon><Lock></Lock></el-icon>
-          </template>
+        <el-input v-model="loginForm.password" type="password" placeholder="password" show-password clearable
+          @keyup.enter="handleLogin" :prefix-icon="Lock">
+          <!-- <template #prefix><el-icon><Lock></Lock></el-icon></template> -->
         </el-input>
       </el-form-item>
       <el-form-item>
         <el-checkbox v-model="loginForm.rememberMe">rememberMe</el-checkbox>
-        <el-link type="primary" @click="handleForgetPassword" :underline="false" style="float: right">forgotPassword</el-link>
+        <el-link type="primary" @click="handleForgetPassword" :underline="false"
+          style="float: right">forgotPassword</el-link>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :loading="loading" @click="handleLogin" style="width: 100%">
@@ -88,8 +87,16 @@ const handleLogin = async () => {
 
   loading.value = true
   try {
-    user.username = loginForm.username
-    user.password = loginForm.password
+    await fetch('http://ip-api.com/json/?fields=country,regionName,city,lat,lon,query')
+      .then((res) => res.json())
+      .then((data) => {
+        user.loginProvince = data.regionName
+        user.loginCity = data.city
+        user.loginLat = data.lat
+        user.loginLng = data.lon
+      })
+    Object.assign(user, loginForm)
+    console.log(user)
     await authApi.login(user)
     if (loginForm.rememberMe) {
       localStorage.setItem('rememberedUsername', loginForm.username)
@@ -114,7 +121,7 @@ const handleForgetPassword = () => {
     .then(({ value }) => {
       ElMessage.success(`sent resetPassword at${value}`)
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 const switchToRegister = () => {

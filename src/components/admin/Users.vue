@@ -13,7 +13,7 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column label="头像" prop="avatar" min-width="60px">
           <template #default="props">
-            <el-avatar :src="IMG.BASE_URL+props.row.avatar"></el-avatar>
+            <el-avatar :src="IMG.AVATAR_URL+props.row.avatar"></el-avatar>
           </template>
         </el-table-column>
         <el-table-column label="昵称" prop="nickname"></el-table-column>

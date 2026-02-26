@@ -75,7 +75,7 @@ const accessAdmin = () => {
           <template v-else>
             <el-dropdown @command="handleUserCommand">
               <div class="user-info">
-                <el-avatar :size="32" :src="IMG.BASE_URL+userInfo.avatar" />
+                <el-avatar :size="32" :src="IMG.AVATAR_URL+userInfo.avatar" />
                 <span class="username">{{ username }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </div>
