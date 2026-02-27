@@ -51,6 +51,7 @@
 </template>
 
 <script setup>
+import { authApi } from '@/api/auth';
 import { useCounterStore } from '@/stores/counter';
 import { IMG } from '@/utils/constants';
 import { onMounted, reactive, ref } from 'vue';
@@ -76,8 +77,8 @@ const changePassword = () => {
 
 }
 
-const changeUserInfo = () => {
-
+const changeUserInfo = async () => {
+  const {data: res} = await authApi.updataUser(userFrom)
 }
 
 
