@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-26 15:50:37
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-12 14:45:44
+ * @LastEditTime: 2026-03-03 15:28:27
  * @FilePath: \blog-front\src\components\admin\charts\BoxCard.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -78,7 +78,7 @@ import { IMG } from '@/utils/constants';
     background-color: #fff;
     margin: auto;
     box-shadow: none !important;
-    ::v-deep .pan-info {
+    :deep .pan-info {
       box-shadow: none !important;
     }
   }

@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-25 15:06:01
+ * @LastEditTime: 2026-03-02 18:26:57
  * @FilePath: \blog-front\src\components\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -90,7 +90,7 @@ const queryBlog = reactive({
   typeId: null,
 })
 const pageNum = ref(1)
-const pageSize = ref(1)
+const pageSize = ref(8)
 const totalCount = ref(0)
 const blogsList = ref([])
 const type = ref('')

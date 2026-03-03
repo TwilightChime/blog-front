@@ -59,6 +59,7 @@ import { onMounted, reactive, ref } from 'vue';
 const userInfo = useCounterStore().userInfo
 const avatarUpload = ref('')
 const userFrom = reactive({
+  id: null,
   nickname: '',
   username: '',
   email: ''
@@ -79,6 +80,9 @@ const changePassword = () => {
 
 const changeUserInfo = async () => {
   const {data: res} = await authApi.updataUser(userFrom)
+  localStorage.setItem('user', JSON.stringify(res.data))
+  sessionStorage.setItem('user', JSON.stringify(res.data))
+  Object.assign(userInfo, res.data)
 }
 
 

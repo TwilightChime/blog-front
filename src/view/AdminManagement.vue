@@ -2,12 +2,12 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-11 16:51:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-26 09:05:42
+ * @LastEditTime: 2026-03-02 16:06:47
  * @FilePath: \blog-front\src\view\AdminManagement.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-container>
+  <el-container class="admin-container">
     <el-header class="admin-header">
       <div class="logo">
         <div @click="toggleCollapse">|||</div>
@@ -21,40 +21,42 @@
         <template v-else>
           <el-dropdown @command="handleUserCommand">
             <div class="user-info">
-              <el-avatar :size="32" :src="IMG.AVATAR_URL+userInfo.avatar" />
+              <el-avatar :size="32" :src="IMG.AVATAR_URL + userInfo.avatar" />
               <span class="username">{{ username }}</span>
-              <el-icon><ArrowDown /></el-icon>
+              <el-icon>
+                <ArrowDown />
+              </el-icon>
             </div>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item command="personal">
-                  <el-icon><User /></el-icon>Personal
+                  <el-icon>
+                    <User />
+                  </el-icon>Personal
                 </el-dropdown-item>
                 <el-dropdown-item command="front-end">
-                  <el-icon><Setting /></el-icon>Back to Front-end
+                  <el-icon>
+                    <Setting />
+                  </el-icon>Back to Front-end
                 </el-dropdown-item>
                 <el-dropdown-item command="logout">
-                  <el-icon><SwitchButton /></el-icon>Log out
+                  <el-icon>
+                    <SwitchButton />
+                  </el-icon>Log out
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
         </template>
       </div>
-      <!-- <div class="loginInfo">
-                <el-avatar :src="userInfo.avatar"></el-avatar>
-                <div class="user-option">
-                    <h3 class="web-font nickname">{{userInfo.nickname}}</h3>
-                    <p class="logout" @click="logout">退出登录</p>
-                </div>
-            </div> -->
     </el-header>
-    <el-container>
-      <el-aside class="admin-sidebar" :width="isCollapse ? '65px':'150px'">
-        <el-menu style="background-color: #4565a1;border: 0;" :default-active="activePath" @select="handMenuSelect" :collapse="isCollapse">
-          <!--            一级菜单-->
+    <el-container class="main-container">
+      <el-aside class="admin-sidebar" :width="isCollapse ? '65px' : '150px'">
+        <el-menu :default-active="activePath" @select="handMenuSelect" :collapse="isCollapse">
           <el-menu-item :index="item.path" v-for="item in menuList" :key="item.id">
-            <el-icon><component :is="item.icon"></component></el-icon>
+            <el-icon>
+              <component :is="item.icon"></component>
+            </el-icon>
             <span>{{ item.authName }}</span>
           </el-menu-item>
         </el-menu>
@@ -63,7 +65,7 @@
         <router-view></router-view>
       </el-main>
     </el-container>
-    
+
   </el-container>
 </template>
 
@@ -77,17 +79,17 @@ const router = useRouter()
 const stores = useCounterStore()
 
 const menuList = [
-  { id: 0, path: '/admin/index', authName: 'Index', icon: House},
-  { id: 1, path: '/admin/blogs', authName: 'Blog', icon: Notebook},
-  { id: 2, path: '/admin/users', authName: 'User', icon: User},
-  { id: 3, path: '/admin/blog-input', authName: 'Composition', icon: EditPen},
-  { id: 4, path: '/admin/types', authName: 'Category', icon: Collection},
-  { id: 5, path: '/admin/tags', authName: 'Tag', icon: CollectionTag},
-  { id: 6, path: '/admin/comments', authName: 'Comment', icon: MessageBox},
-  { id: 7, path: '/admin/essays', authName: 'Article', icon: Mug},
-  { id: 8, path: '/admin/projects', authName: 'Project', icon: Files},
-  { id: 9, path: '/admin/administrator', authName: 'Personal', icon: Avatar},
-  { id: 10, path: '/admin/pictures', authName: 'Picture', icon: Picture},
+  { id: 0, path: '/admin/index', authName: 'Index', icon: House },
+  { id: 1, path: '/admin/blogs', authName: 'Blog', icon: Notebook },
+  { id: 2, path: '/admin/users', authName: 'User', icon: User },
+  { id: 3, path: '/admin/blog-input', authName: 'Composition', icon: EditPen },
+  { id: 4, path: '/admin/types', authName: 'Category', icon: Collection },
+  { id: 5, path: '/admin/tags', authName: 'Tag', icon: CollectionTag },
+  { id: 6, path: '/admin/comments', authName: 'Comment', icon: MessageBox },
+  { id: 7, path: '/admin/essays', authName: 'Article', icon: Mug },
+  { id: 8, path: '/admin/projects', authName: 'Project', icon: Files },
+  { id: 9, path: '/admin/administrator', authName: 'Personal', icon: Avatar },
+  { id: 10, path: '/admin/pictures', authName: 'Picture', icon: Picture },
 ]
 const isCollapse = ref(false)
 const activePath = ref('')
@@ -119,13 +121,17 @@ const handleLogout = async () => {
   try {
     stores.logout()
     await router.push('/')
-  } catch (error) {
-    // 用户取消
-  }
+  } catch (error) { }
 }
 </script>
 
 <style scoped>
+.admin-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -133,7 +139,7 @@ const handleLogout = async () => {
   padding: 0px 10px;
   background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-dark) 100%);
   border-bottom: 1px solid var(--border-dark);
-  height: 60px;
+  flex-shrink: 0;
 
   .logo {
     display: flex;
@@ -141,49 +147,86 @@ const handleLogout = async () => {
     align-items: center;
     color: var(--text-light);
 
-    > div {
+    >div {
       cursor: pointer;
       margin-right: 10px;
-      
+
       & :hover {
         background-color: aqua;
       }
     }
   }
+
+  .user-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    .user-info:hover {
+      background-color: var(--border-dark);
+      border-color: var(--border-dark);
+    }
+
+    .user-info .username {
+      margin: 0 8px;
+      font-size: 14px;
+    }
+  }
+}
+
+.main-container {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .admin-sidebar {
-  min-height: 100vh;
+  height: 100%;
   background-color: #4565a1;
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow-y: auto;
+  flex-shrink: 0;
+
+  .el-menu {
+    background-color: #4565a1;
+    border: 0;
+
+    .el-menu-item {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .el-menu-item.is-active {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+      color: #fff !important;
+    }
+
+    .el-menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+
+  /* 美化滚动条 */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
 }
 
-.user-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.el-dropdown{
+.el-dropdown {
   border-color: var(--border-dark);
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-}
-
-.user-info:hover {
-  background-color: var(--border-dark);
-  border-color: var(--border-dark);
-}
-
-.user-info .username {
-  margin: 0 8px;
-  font-size: 14px;
 }
 </style>

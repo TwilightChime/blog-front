@@ -25,3 +25,12 @@ export const tagApi = {
     return request.get(`/admin/tags/${data}/delete`)
   }
 }
+
+export const frontEndTag = {
+  getTagList() {
+    return request.get('/getTagList')
+  },
+  getTagBlogList(id) {
+    return request.get(`/tags/${id}`)
+  }
+}
