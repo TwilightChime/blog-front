@@ -9,7 +9,7 @@
           <span>My Blog</span>
         </div>
         <div class="nav-menu">
-          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+          <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect">
             <el-menu-item index="1">Index</el-menu-item>
             <el-menu-item index="2">Pro</el-menu-item>
             <el-menu-item index="3">About</el-menu-item>
@@ -118,7 +118,7 @@ const goToDashboard = () => {
   position: relative;
   top: 0;
   width: 100%;
-  height: 120vh;
+  height: 110vh;
   background-repeat: no-repeat;
   background-size: cover;
   border-bottom: 3px solid #fff;
@@ -129,8 +129,8 @@ const goToDashboard = () => {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.3);
-  border-bottom: 1px solid #e4e7ed;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid #404045;
   padding: 0;
   z-index: 1000;
 }
@@ -162,6 +162,15 @@ const goToDashboard = () => {
   flex: 1;
   display: flex;
   justify-content: center;
+
+  .el-menu {
+    border: 0px;
+    background-color: rgba(0, 0, 0, 0);
+
+    .el-menu-item {
+      color: #d8e0e8;
+    }
+  }
 }
 
 .user-actions {

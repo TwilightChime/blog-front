@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-12 11:05:19
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-03 14:52:39
+ * @LastEditTime: 2026-03-04 10:05:59
  * @FilePath: \blog-front\src\api\typeApi.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,14 +16,17 @@ export const typeApi = {
     return request.get(`/admin/types/${data.id}/delete`)
   },
   updataType(data) {
-    return request.post('/admin/types', {type: data})
+    return request.post('/admin/types', { type: data })
   }
 }
- export const frontEndType = {
+export const frontEndType = {
   getTypeList() {
     return request.get('/getTypeList')
   },
   getTypeBlogList(id) {
     return request.get(`/types/${id}`)
+  },
+  getFullTypeList() {
+    return request.get('/getFullTypeList')
   }
- }
+}

@@ -6,7 +6,7 @@ export const tagApi = {
   },
 
   updataTag(data) {
-    return request.post('/admin/tags', {tag: data})
+    return request.post('/admin/tags', { tag: data })
   },
 
   tagUpdateBlog(data) {
@@ -32,5 +32,8 @@ export const frontEndTag = {
   },
   getTagBlogList(id) {
     return request.get(`/tags/${id}`)
+  },
+  getFullTagList() {
+    return request.get('/getFullTagList')
   }
 }

@@ -2,19 +2,21 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-03 18:19:31
+ * @LastEditTime: 2026-03-04 18:32:25
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div>
-    <el-card shadow="none" class="welcome">
-      <h1 class="tit">
-        欢迎来到TwilightChimeの个人博客
-        <div class="border"></div>
+    <el-card shadow="none" class="welcome-card">
+      <h1 class="welcome-title">
+        欢迎来到Chimeの个人博客
+        <div class="welcome-border"></div>
       </h1>
-      <h2 class="intro">这是我的个人博客、会分享关于编程，开发以及其他方面的一些内容，希望可以对您有所帮助...</h2>
-      <el-icon class="bounce down" @click="startRead" style="color: black"><ArrowDown /></el-icon>
+      <h2 class="welcome-introduction">这是我的个人博客、会分享关于编程，开发以及其他方面的一些内容，希望可以对您有所帮助...</h2>
+      <el-icon class="welcome-arrowdown" @click="startRead" size="30">
+        <ArrowDown />
+      </el-icon>
     </el-card>
     <el-container id="index">
       <el-row :gutter="12">
@@ -44,11 +46,15 @@
                       <a href="#" class="header">{{ blog.user.nickname }}</a>
                     </div>
                     <div class="blog-date">
-                      <el-icon><Clock /></el-icon>
+                      <el-icon>
+                        <Clock />
+                      </el-icon>
                       <span>{{ blog.createTime | dataFormat }}</span>
                     </div>
                     <div>
-                      <el-icon><View /></el-icon>
+                      <el-icon>
+                        <View />
+                      </el-icon>
                       <span>{{ blog.views }}</span>
                     </div>
                     <div class="blog-type">
@@ -72,16 +78,20 @@
               <li class="blog-type" v-for="type in typeList" :key="type.id" @click="selectType(type.id)"
                 :class="type.id === typeId ? 'activeType' : ''">
                 <div style="display: flex;align-items: center">
-                  <el-image lazy :src="IMG.BASE_URL + type.pic_url"
+                  <el-image lazy :src="IMG.BASE_URL + type.pic_url" fit="cover"
                     style="width: 28px;height: 28px; border-radius: 50%; margin-right: 10px"></el-image>
                   {{ type.name }}
                 </div>
                 <div>{{ type.blogs.length }}</div>
               </li>
             </ul>
-            <div class="more" @click="dealType">
-              <el-icon v-if="moreType"><ArrowDown /></el-icon>
-              <el-icon v-else><ArrowUp /></el-icon>
+            <div class="more" @click="typeFold">
+              <el-icon v-if="notFullType">
+                <ArrowDown />
+              </el-icon>
+              <el-icon v-else>
+                <ArrowUp />
+              </el-icon>
             </div>
           </el-card>
           <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item">
@@ -100,9 +110,13 @@
                 </div>
               </div>
             </div>
-            <div class="more" @click="dealTag">
-              <el-icon v-if="moreTag"><ArrowDown /></el-icon>
-              <el-icon v-else><ArrowUp /></el-icon>
+            <div class="more" @click="tagFold">
+              <el-icon v-if="notFullTag">
+                <ArrowDown />
+              </el-icon>
+              <el-icon v-else>
+                <ArrowUp />
+              </el-icon>
             </div>
           </el-card>
           <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item">
@@ -143,6 +157,8 @@ const totalCount = ref(0)
 
 const typeId = ref(-1)
 const tagId = ref(-1)
+const notFullType = ref(true)
+const notFullTag = ref(true)
 
 onMounted(() => {
   getBlogList()
@@ -212,4 +228,119 @@ const backBlogList = () => {
   titleBlog.value = '全部博客'
   getBlogList()
 }
+
+//分类标签展开收展
+const typeFold = async () => {
+  if (notFullType.value) {
+    const { data: res } = await frontEndType.getFullTypeList()
+    typeList.value = res.data
+    notFullType.value = false
+  } else {
+    const { data: res } = await frontEndType.getTypeList()
+    typeList.value = res.data
+    notFullType.value = true
+  }
+}
+const tagFold = async () => {
+  if (notFullTag.value) {
+    const { data: res } = await frontEndTag.getFullTagList()
+    tagList.value = res.data
+    notFullTag.value = false
+  } else {
+    const { data: res } = await frontEndTag.getTagList()
+    tagList.value = res.data
+    notFullTag.value = true
+  }
+}
 </script>
+
+<style scoped>
+.welcome-card {
+  position: absolute;
+  height: 85%;
+  width: 96%;
+  top: 10%;
+  left: 2%;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: 0px;
+}
+
+.welcome-title {
+  position: relative;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 700px;
+  height: 100px;
+  border: 2px solid #ffff;
+  text-align: center;
+  line-height: 100px;
+  color: #ffff;
+  font-size: 40px;
+  font-weight: normal;
+  letter-spacing: 10px;
+
+  .welcome-border {
+    width: 812px;
+    height: 112px;
+    position: absolute;
+    top: -3px;
+    left: -10px;
+    border: 2px solid #ffff;
+    animation: clipMe 5s linear infinite;
+  }
+}
+
+.welcome-introduction {
+  position: relative;
+  top: 20%;
+  text-align: center;
+  color: #ffff;
+}
+
+.welcome-arrowdown {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  transform: translate(0, -50%);
+  color: #ffff;
+}
+
+@keyframes clipMe {
+
+  0%,
+  100% {
+    clip: rect(0px, 806px, 6px, 0px);
+  }
+
+  25% {
+    clip: rect(0px, 6px, 112px, 0px);
+  }
+
+  50% {
+    clip: rect(112px, 812px, 112px, 0px);
+  }
+
+  75% {
+    clip: rect(0px, 812px, 112px, 806px);
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+
+  40% {
+    transform: translate(-50%, -30px);
+  }
+
+  60% {
+    transform: translate(-50%, -15px);
+  }
+}</style>
