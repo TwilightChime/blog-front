@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-04 18:32:25
+ * @LastEditTime: 2026-03-05 18:29:08
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,10 +13,11 @@
         欢迎来到Chimeの个人博客
         <div class="welcome-border"></div>
       </h1>
-      <h2 class="welcome-introduction">这是我的个人博客、会分享关于编程，开发以及其他方面的一些内容，希望可以对您有所帮助...</h2>
-      <el-icon class="welcome-arrowdown" @click="startRead" size="30">
-        <ArrowDown />
+      <h2 class="welcome-introduction">{{ introduction }}</h2>
+      <el-icon class="welcome-arrowdown" @click="arrowDownBrowse" size="30">
+        <ArrowDown class="arrowdown-svg"></ArrowDown>
       </el-icon>
+      <div style="position: absolute; bottom: 0%; height: 0%;" id="line"></div>
     </el-card>
     <el-container id="index">
       <el-row :gutter="12">
@@ -139,7 +140,7 @@ import { frontEndBlog } from '@/api/blog';
 import { frontEndType } from '@/api/typeApi'
 import { frontEndTag } from '@/api/tagApi'
 import { IMG } from '@/utils/constants';
-import { onMounted, reactive, ref } from 'vue';
+import { nextTick, onMounted, reactive, ref } from 'vue';
 import { Back, Clock, View, ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 
 const blogList = ref([])
@@ -147,6 +148,7 @@ const typeList = ref([])
 const tagList = ref([])
 const recommendBlogList = ref([])
 
+const introduction = ref('')
 const isFilterBlog = ref(false)
 const titleBlog = ref('全部博客')
 
@@ -165,6 +167,7 @@ onMounted(() => {
   getTypeList()
   getTagList()
   getRecommendBlogList()
+  welcomeIntroTimer()
 })
 
 //数据列表获取
@@ -187,6 +190,26 @@ const getTagList = async () => {
 const getRecommendBlogList = async () => {
   const { data: res } = await frontEndBlog.getRecommendBlogList()
   recommendBlogList.value = res.data
+}
+
+//欢迎页组件
+const welcomeIntroTimer = () => {
+  let num = 0
+  let str = '这是我的个人博客、会分享关于编程，开发以及其他方面的一些内容，希望可以对您有所帮助...'
+  function timer() {
+    introduction.value = introduction.value + str.slice(num, num + 1)
+    num > str.length ? (num = 0, introduction.value = '') : num++
+    setTimeout(timer, 200)
+  }
+  setTimeout(timer, 2000)
+}
+const arrowDownBrowse = () => {
+  nextTick(() => {
+    document.getElementById('line').scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+  })
 }
 
 //跳转博客详情
@@ -257,7 +280,7 @@ const tagFold = async () => {
 <style scoped>
 .welcome-card {
   position: absolute;
-  height: 85%;
+  height: 100%;
   width: 96%;
   top: 10%;
   left: 2%;
@@ -301,9 +324,15 @@ const tagFold = async () => {
 .welcome-arrowdown {
   position: absolute;
   left: 50%;
-  bottom: 10%;
-  transform: translate(0, -50%);
-  color: #ffff;
+  bottom: 20%;
+  transform: translate(-50%, 0) scale(2);
+  border: 1px solid rgb(255, 255, 255, 0.9);
+  border-radius: 50%;
+  
+  .arrowdown-svg {
+    transform: translate(0, 5%) scale(0.5);
+    color: rgb(255, 255, 255, 0.9);
+  }
 }
 
 @keyframes clipMe {
@@ -343,4 +372,5 @@ const tagFold = async () => {
   60% {
     transform: translate(-50%, -15px);
   }
-}</style>
+}
+</style>

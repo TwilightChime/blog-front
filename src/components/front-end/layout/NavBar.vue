@@ -118,7 +118,7 @@ const goToDashboard = () => {
   position: relative;
   top: 0;
   width: 100%;
-  height: 110vh;
+  height: 116vh;
   background-repeat: no-repeat;
   background-size: cover;
   border-bottom: 3px solid #fff;
