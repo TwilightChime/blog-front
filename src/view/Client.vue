@@ -116,7 +116,6 @@ const goToDashboard = () => {
 .main-content {
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
 }
 
 .welcome {

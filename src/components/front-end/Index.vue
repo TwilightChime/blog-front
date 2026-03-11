@@ -2,137 +2,132 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-05 18:29:08
+ * @LastEditTime: 2026-03-11 18:27:08
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <div>
-    <el-card shadow="none" class="welcome-card">
-      <h1 class="welcome-title">
-        欢迎来到Chimeの个人博客
-        <div class="welcome-border"></div>
-      </h1>
-      <h2 class="welcome-introduction">{{ introduction }}</h2>
-      <el-icon class="welcome-arrowdown" @click="arrowDownBrowse" size="30">
-        <ArrowDown class="arrowdown-svg"></ArrowDown>
-      </el-icon>
-      <div style="position: absolute; bottom: 0%; height: 0%;" id="line"></div>
-    </el-card>
-    <el-container id="index">
-      <el-row :gutter="12">
-        <el-col :xs="24" :sm="17">
-          <el-card style="background-color: rgba(255,255,255,0.9)" class="left-item">
-            <div slot="header" class="total">
-              <div class="title">
-                <el-icon v-if="isFilterBlog" @click="backBlogList">
-                  <Back />
-                </el-icon>
-                <span>{{ titleBlog }}</span>
-              </div>
-              <span>共 <span style="color: #3a8ee6; font-size: 20px">{{ totalCount }}</span> 篇</span>
-            </div>
-            <el-row type="flex" align="middle" style="flex-wrap: wrap" :gutter="20" v-for="blog in blogList"
-              :key="blog.id" shadow="never" class="blog-content">
-              <el-col class="img" :xs="24" :sm="8">
-                <el-image lazy :src="IMG.BASE_URL + blog.firstPicture"></el-image>
-              </el-col>
-              <el-col :xs="24" :sm="16">
-                <div @click="getBlogInfo(blog.id)">
-                  <h3>{{ blog.title }}</h3>
-                  <p class="description">{{ blog.description }}</p>
-                  <div class="blog-info">
-                    <div class="user-info">
-                      <el-avatar size="small" :src="blog.user.avatar"></el-avatar>
-                      <a href="#" class="header">{{ blog.user.nickname }}</a>
-                    </div>
-                    <div class="blog-date">
-                      <el-icon>
-                        <Clock />
-                      </el-icon>
-                      <span>{{ blog.createTime | dataFormat }}</span>
-                    </div>
-                    <div>
-                      <el-icon>
-                        <View />
-                      </el-icon>
-                      <span>{{ blog.views }}</span>
-                    </div>
-                    <div class="blog-type">
-                      <el-tag effect="plain">{{ blog.type.name }}</el-tag>
-                    </div>
-                  </div>
-                </div>
-              </el-col>
-            </el-row>
-          </el-card>
-          <el-pagination :current-page="pageNum" @current-change="pageCurrentChange" @size-change="pageSizeChange"
-            :page-size="pageSize" :layout="pageLayout" background :total="totalCount"
-            :page-sizes="[1, 2, 3, 4]"></el-pagination>
-        </el-col>
-        <el-col :xs="24" :sm="7">
-          <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item">
-            <div slot="header" class="attributes">
-              <b>分类</b>
-            </div>
-            <ul>
-              <li class="blog-type" v-for="type in typeList" :key="type.id" @click="selectType(type.id)"
-                :class="type.id === typeId ? 'activeType' : ''">
-                <div style="display: flex;align-items: center">
-                  <el-image lazy :src="IMG.BASE_URL + type.pic_url" fit="cover"
-                    style="width: 28px;height: 28px; border-radius: 50%; margin-right: 10px"></el-image>
-                  {{ type.name }}
-                </div>
-                <div>{{ type.blogs.length }}</div>
-              </li>
-            </ul>
-            <div class="more" @click="typeFold">
-              <el-icon v-if="notFullType">
-                <ArrowDown />
+  <el-card shadow="none" class="welcome-card">
+    <h1 class="welcome-title">
+      欢迎来到Chimeの个人博客
+      <div class="welcome-border"></div>
+    </h1>
+    <h2 class="welcome-introduction">{{ introduction }}</h2>
+    <el-icon class="welcome-arrowdown" @click="arrowDownBrowse" size="30">
+      <ArrowDown class="arrowdown-svg"></ArrowDown>
+    </el-icon>
+    <div style="position: absolute; bottom: 0%; height: 0%;" id="line"></div>
+  </el-card>
+  <el-container id="index">
+    <el-row justify="center" class="index-main">
+      <el-col :xs="14" :sm="14" class="main-item-blog">
+        <el-card class="blog-card">
+          <div slot="header" class="blog-card-header">
+            <div class="blog-header-title">
+              <el-icon v-if="isFilterBlog" @click="backBlogList">
+                <Back />
               </el-icon>
-              <el-icon v-else>
-                <ArrowUp />
-              </el-icon>
+              <span style="font-size: 20px;">{{ titleBlog }}</span>
             </div>
-          </el-card>
-          <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item">
-            <div slot="header" class="attributes">
-              <b>标签</b>
-            </div>
-            <div class="tags">
-              <div class="tag-item" v-for="tag in tagList" :key="tag.id" @click="selectTag(tag.id)"
-                :class="tag.id === tagId ? 'activeTag' : ''">
-                <div class="sjx-outer">
-                  <div class="sjx-inner"></div>
+            <span>共 <span style="color:#3a8ee6;font-size:20px">{{ totalCount }}</span> 篇</span>
+          </div>
+          <el-row v-for="blog in blogList" :key="blog.id" class="blog-card-main">
+            <el-col class="blog-img" :xs="24" :sm="8">
+              <el-image lazy :src="IMG.BASE_URL + blog.firstPicture"></el-image>
+            </el-col>
+            <el-col :xs="24" :sm="16" @click="getBlogInfo(blog.id)">
+              <h3>{{ blog.title }}</h3>
+              <p class="blog-description">{{ blog.description }}</p>
+              <div class="blog-info">
+                <div class="blog-info-user">
+                  <el-avatar size="small" :src="blog.user.avatar"></el-avatar>
+                  <a href="#" class="info-nickname">{{ blog.user.nickname }}</a>
                 </div>
-                <div class="tag">
-                  {{ tag.name }}
-                  {{ tag.blogs.length }}
+                <div class="blog-info-date">
+                  <el-icon>
+                    <Clock />
+                  </el-icon>
+                  <span>{{ blog.createTime | dataFormat }}</span>
+                </div>
+                <div>
+                  <el-icon>
+                    <View />
+                  </el-icon>
+                  <span>{{ blog.views }}</span>
+                </div>
+                <div class="blog-info-type">
+                  <el-tag effect="plain">{{ blog.type.name }}</el-tag>
                 </div>
               </div>
+            </el-col>
+          </el-row>
+        </el-card>
+        <el-pagination class="blog-page" :current-page="pageNum" @current-change="pageCurrentChange"
+          @size-change="pageSizeChange" :page-size="pageSize" :layout="pageLayout" background :total="totalCount"
+          :page-sizes="[1, 2, 3, 4]"></el-pagination>
+      </el-col>
+      <el-col :xs="4" :sm="4">
+        <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item type">
+          <div slot="header" class="type-title">
+            <b>分类</b>
+          </div>
+          <ul>
+            <li class="blog-type" v-for="type in typeList" :key="type.id" @click="selectType(type.id)"
+              :class="type.id === typeId ? 'activeType' : ''">
+              <div style="display: flex;align-items: center">
+                <el-image lazy :src="IMG.BASE_URL + type.pic_url" fit="cover"
+                  style="width: 28px;height: 28px; border-radius: 50%; margin-right: 10px"></el-image>
+                {{ type.name }}
+              </div>
+              <div>{{ type.blogs.length }}</div>
+            </li>
+          </ul>
+          <div class="more" @click="typeFold">
+            <el-icon v-if="notFullType">
+              <ArrowDown />
+            </el-icon>
+            <el-icon v-else>
+              <ArrowUp />
+            </el-icon>
+          </div>
+        </el-card>
+        <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item tag">
+          <div slot="header" class="attributes">
+            <b>标签</b>
+          </div>
+          <div class="tags">
+            <div class="tag-item" v-for="tag in tagList" :key="tag.id" @click="selectTag(tag.id)"
+              :class="tag.id === tagId ? 'activeTag' : ''">
+              <div class="sjx-outer">
+                <div class="sjx-inner"></div>
+              </div>
+              <div class="tag">
+                {{ tag.name }}
+                {{ tag.blogs.length }}
+              </div>
             </div>
-            <div class="more" @click="tagFold">
-              <el-icon v-if="notFullTag">
-                <ArrowDown />
-              </el-icon>
-              <el-icon v-else>
-                <ArrowUp />
-              </el-icon>
-            </div>
-          </el-card>
-          <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item">
-            <div slot="header" class="attributes">
-              <span>最新推荐</span>
-            </div>
-            <div class="recommend-blog l-text" v-for="blog in recommendBlogList" :key="blog.id"
-              @click="getBlogInfo(blog.id)">
-              <a>{{ blog.title }}</a>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-container>
-  </div>
+          </div>
+          <div class="more" @click="tagFold">
+            <el-icon v-if="notFullTag">
+              <ArrowDown />
+            </el-icon>
+            <el-icon v-else>
+              <ArrowUp />
+            </el-icon>
+          </div>
+        </el-card>
+        <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item recommend">
+          <div slot="header" class="attributes">
+            <span>最新推荐</span>
+          </div>
+          <div class="recommend-blog l-text" v-for="blog in recommendBlogList" :key="blog.id"
+            @click="getBlogInfo(blog.id)">
+            <a>{{ blog.title }}</a>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </el-container>
 </template>
 
 <script setup>
@@ -153,7 +148,7 @@ const isFilterBlog = ref(false)
 const titleBlog = ref('全部博客')
 
 const pageNum = ref(1)
-const pageSize = ref(2)
+const pageSize = ref(8)
 const pageLayout = "total, sizes, prev, pager, next, jumper"
 const totalCount = ref(0)
 
@@ -276,7 +271,6 @@ const tagFold = async () => {
   }
 }
 </script>
-
 <style scoped>
 .welcome-card {
   position: absolute;
@@ -328,7 +322,7 @@ const tagFold = async () => {
   transform: translate(-50%, 0) scale(2);
   border: 1px solid rgb(255, 255, 255, 0.9);
   border-radius: 50%;
-  
+
   .arrowdown-svg {
     transform: translate(0, 5%) scale(0.5);
     color: rgb(255, 255, 255, 0.9);
@@ -372,5 +366,66 @@ const tagFold = async () => {
   60% {
     transform: translate(-50%, -15px);
   }
+}
+
+.index-main {
+  min-width: 100%;
+  margin-top: 10px;
+}
+
+.main-item-blog {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-right: 10px;
+
+  .blog-card {
+    background-color: rgba(255, 255, 255, 0.9);
+    margin: 0 auto;
+  }
+
+  .blog-page {
+    margin: 0 auto;
+  }
+}
+
+.blog-card-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.blog-card-main {
+  margin: 10px 0;
+
+  .blog-img {
+    padding-right: 15px;
+  }
+
+  .blog-info {
+    display: flex;
+    align-content: center;
+
+    .blog-info-user {
+      display: flex;
+      justify-content: space-around;
+
+      .info-nickname {
+        margin-left: 5px;
+      }
+    }
+
+    .blog-info-date {
+      margin: 0 15px;
+    }
+
+    .blog-info-type {
+      margin-left: auto;
+    }
+  }
+}
+
+.right-item {
+  margin-bottom: 20px;
 }
 </style>
