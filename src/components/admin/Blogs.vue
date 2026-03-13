@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-02 18:26:57
+ * @LastEditTime: 2026-03-13 15:24:05
  * @FilePath: \blog-front\src\components\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -16,7 +16,7 @@
       <div>
         <h1>BlogManagement</h1>
       </div>
-      <el-input aria-placeholder="title" v-model="queryBlog.title"></el-input>
+      <el-input placeholder="title" v-model="queryBlog.title"></el-input>
       <el-button @click="clearSearch">clear</el-button>
       <el-button type="primary" @click="getBlogList">search</el-button>
       <!-- <el-table :data="blogsList">
@@ -74,7 +74,7 @@
   </div>
 </template>
 <script setup>
-import { nextTick, onMounted, reactive, ref } from 'vue'
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { blogApi } from '@/api/blog'
 import { tagApi } from '@/api/tagApi'
 import { useCounterStore } from '@/stores/counter'
@@ -82,17 +82,21 @@ import { Check, Delete, Edit, Message, Search, Star } from '@element-plus/icons-
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { IMG } from '@/utils/constants'
+import { eventBus } from '@/utils/eventBus'
 const stores = useCounterStore()
 const router = useRouter()
 
+const blogsList = ref([])
 const queryBlog = reactive({
   title: '',
   typeId: null,
 })
+const blog = reactive({})
+
 const pageNum = ref(1)
 const pageSize = ref(8)
 const totalCount = ref(0)
-const blogsList = ref([])
+
 const type = ref('')
 const tagList = ref([])
 const tagInputRef = ref(null)
@@ -124,8 +128,24 @@ const getFullTagList = async () => {
 onMounted(() => {
   getBlogList()
   getFullTagList()
+  eventBus.on('pic_url', acceptPic)
+})
+onUnmounted(() => {
+  eventBus.off('pic_url', acceptPic)
 })
 
+const acceptPic = async (data) => {
+  blog.firstPicture = data.url
+  await blogApi.getBlog(blog)
+  getBlogList()
+}
+const editPic = (data) => {
+  Object.assign(blog, data)
+  eventBus.emit('dialogPicVisible', {
+    from: 'blogs',
+    visible: true
+  })
+}
 const tagDel = async (i, row) => {
   const tag = row.tags[i]
   row.tags.splice(i, 1)

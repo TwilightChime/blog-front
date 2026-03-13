@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-11 18:27:08
+ * @LastEditTime: 2026-03-12 11:40:24
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -67,22 +67,20 @@
           :page-sizes="[1, 2, 3, 4]"></el-pagination>
       </el-col>
       <el-col :xs="4" :sm="4">
-        <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item type">
+        <el-card class="right-item-type">
           <div slot="header" class="type-title">
             <b>分类</b>
           </div>
           <ul>
-            <li class="blog-type" v-for="type in typeList" :key="type.id" @click="selectType(type.id)"
-              :class="type.id === typeId ? 'activeType' : ''">
+            <li class="type-list" v-for="type in typeList" :key="type.id" @click="selectType(type.id)" :class="type.id === typeId ? 'activeType' : ''">
               <div style="display: flex;align-items: center">
-                <el-image lazy :src="IMG.BASE_URL + type.pic_url" fit="cover"
-                  style="width: 28px;height: 28px; border-radius: 50%; margin-right: 10px"></el-image>
+                <el-image lazy :src="IMG.BASE_URL + type.pic_url" fit="cover" style="width: 28px;height: 28px;border-radius: 50%;margin-right: 10px"></el-image>
                 {{ type.name }}
               </div>
-              <div>{{ type.blogs.length }}</div>
+              <div style="margin-left: auto;">{{ type.blogs.length }}</div>
             </li>
           </ul>
-          <div class="more" @click="typeFold">
+          <div class="type-fold" @click="typeFold">
             <el-icon v-if="notFullType">
               <ArrowDown />
             </el-icon>
@@ -91,13 +89,12 @@
             </el-icon>
           </div>
         </el-card>
-        <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item tag">
-          <div slot="header" class="attributes">
+        <el-card class="right-item-tag">
+          <div slot="header" class="tag-title">
             <b>标签</b>
           </div>
-          <div class="tags">
-            <div class="tag-item" v-for="tag in tagList" :key="tag.id" @click="selectTag(tag.id)"
-              :class="tag.id === tagId ? 'activeTag' : ''">
+          <div class="tag-view">
+            <div class="tag-list" v-for="tag in tagList" :key="tag.id" @click="selectTag(tag.id)" :class="tag.id === tagId ? 'activeTag' : ''">
               <div class="sjx-outer">
                 <div class="sjx-inner"></div>
               </div>
@@ -107,7 +104,7 @@
               </div>
             </div>
           </div>
-          <div class="more" @click="tagFold">
+          <div class="tag-fold" @click="tagFold">
             <el-icon v-if="notFullTag">
               <ArrowDown />
             </el-icon>
@@ -116,11 +113,11 @@
             </el-icon>
           </div>
         </el-card>
-        <el-card style="background-color: rgba(255,255,255,0.9)" class="right-item recommend">
-          <div slot="header" class="attributes">
+        <el-card class="right-item-recommend">
+          <div slot="header" class="recommend-title">
             <span>最新推荐</span>
           </div>
-          <div class="recommend-blog l-text" v-for="blog in recommendBlogList" :key="blog.id"
+          <div class="recommend-list" v-for="blog in recommendBlogList" :key="blog.id"
             @click="getBlogInfo(blog.id)">
             <a>{{ blog.title }}</a>
           </div>
@@ -425,7 +422,26 @@ const tagFold = async () => {
   }
 }
 
-.right-item {
+.right-item-type, .right-item-tag, .right-item-recommend {
   margin-bottom: 20px;
 }
+
+.type-title, .tag-title, .recommend-title {
+  margin-bottom: 10px;
+}
+
+.tag-view {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag-list {
+  margin: 0 10px;
+}
+
+.type-list {
+  display: flex;
+  margin: 10px 0;
+}
+
 </style>

@@ -74,7 +74,6 @@ const userInfo = computed(() => stores.userInfo || {})
 
 const showLogin = () => {
   stores.showLoginDialog()
-  console.log(stores.isLoginVisible)
 }
 
 const showRegister = () => {
