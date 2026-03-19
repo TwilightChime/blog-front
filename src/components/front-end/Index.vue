@@ -2,12 +2,12 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-12 11:40:24
+ * @LastEditTime: 2026-03-19 18:27:02
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-card shadow="none" class="welcome-card">
+  <el-card shadow="none" id="welcomeId" class="welcome-card" ref="welcomeRef">
     <h1 class="welcome-title">
       欢迎来到Chimeの个人博客
       <div class="welcome-border"></div>
@@ -18,7 +18,7 @@
     </el-icon>
     <div style="position: absolute; bottom: 0%; height: 0%;" id="line"></div>
   </el-card>
-  <el-container id="index">
+  <el-container id="indexId">
     <el-row justify="center" class="index-main">
       <el-col :xs="14" :sm="14" class="main-item-blog">
         <el-card class="blog-card">
@@ -32,10 +32,10 @@
             <span>共 <span style="color:#3a8ee6;font-size:20px">{{ totalCount }}</span> 篇</span>
           </div>
           <el-row v-for="blog in blogList" :key="blog.id" class="blog-card-main">
-            <el-col class="blog-img" :xs="24" :sm="8">
-              <el-image lazy :src="IMG.BASE_URL + blog.firstPicture"></el-image>
+            <el-col class="main-blog-img" :xs="24" :sm="8">
+              <el-image lazy :src="IMG.BASE_URL + blog.firstPicture" style="border-radius: 5px;flex-shrink: 0;"></el-image>
             </el-col>
-            <el-col :xs="24" :sm="16" @click="getBlogInfo(blog.id)">
+            <el-col class="main-blog-content" :xs="24" :sm="16" @click="getBlogInfo(blog.id)">
               <h3>{{ blog.title }}</h3>
               <p class="blog-description">{{ blog.description }}</p>
               <div class="blog-info">
@@ -44,13 +44,13 @@
                   <a href="#" class="info-nickname">{{ blog.user.nickname }}</a>
                 </div>
                 <div class="blog-info-date">
-                  <el-icon>
+                  <el-icon style="margin-right: 2px;">
                     <Clock />
                   </el-icon>
-                  <span>{{ blog.createTime | dataFormat }}</span>
+                  <span>{{ $filters.dateFormat(blog.createTime) }}</span>
                 </div>
-                <div>
-                  <el-icon>
+                <div class="blog-info-view">
+                  <el-icon style="margin-right: 2px;">
                     <View />
                   </el-icon>
                   <span>{{ blog.views }}</span>
@@ -132,8 +132,9 @@ import { frontEndBlog } from '@/api/blog';
 import { frontEndType } from '@/api/typeApi'
 import { frontEndTag } from '@/api/tagApi'
 import { IMG } from '@/utils/constants';
-import { nextTick, onMounted, reactive, ref } from 'vue';
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Back, Clock, View, ArrowDown, ArrowUp } from '@element-plus/icons-vue'
+import { eventBus } from '@/utils/eventBus';
 
 const blogList = ref([])
 const typeList = ref([])
@@ -143,6 +144,10 @@ const recommendBlogList = ref([])
 const introduction = ref('')
 const isFilterBlog = ref(false)
 const titleBlog = ref('全部博客')
+
+const welcomeRef = ref(null)
+const scrollY = ref(0)
+const activeSection = ref('welcomeId')
 
 const pageNum = ref(1)
 const pageSize = ref(8)
@@ -160,6 +165,11 @@ onMounted(() => {
   getTagList()
   getRecommendBlogList()
   welcomeIntroTimer()
+  window.addEventListener('scroll', debouncedScroll(), { passive: true })
+  handleScroll()
+})
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 
 //数据列表获取
@@ -182,6 +192,39 @@ const getTagList = async () => {
 const getRecommendBlogList = async () => {
   const { data: res } = await frontEndBlog.getRecommendBlogList()
   recommendBlogList.value = res.data
+}
+
+const handleScroll = () => {
+  scrollY.value = window.scrollY
+  const sections = ['welcomeId', 'indexId']
+  for (const section of sections) {
+    const element = document.getElementById(section)
+    if (element) {
+      const rect = element.getBoundingClientRect()
+      if (rect.top <= 100 && rect.bottom >= 100) {
+        activeSection.value = section
+        const welcomeHeight = welcomeRef.value?.offsetHeight || window.innerHeight
+        const opacity = Math.min(scrollY.value / welcomeHeight * 1.5, 0.95)
+        const blur = Math.min(scrollY.value / 100 * 5, 10)
+        eventBus.emit('navbarStyle', {
+          from: 'frontendIndex',
+          data: {backgroundColor: `rgba(0, 0, 0, ${opacity})`, backdropFilter: `blur(${blur}px)`, boxShadow: scrollY.value > 50 ? '0 2px 20px rgba(0,0,0,0.1)' : 'none'}
+        })
+        break
+      }
+    }
+  }
+}
+const debouncedScroll = () => {
+  let timeoutId = null
+  return () => {
+    if (timeoutId) {
+      cancelAnimationFrame(timeoutId)
+    }
+    timeoutId = requestAnimationFrame(() => {
+      handleScroll()
+    })
+  }
 }
 
 //欢迎页组件
@@ -268,6 +311,7 @@ const tagFold = async () => {
   }
 }
 </script>
+
 <style scoped>
 .welcome-card {
   position: absolute;
@@ -393,15 +437,26 @@ const tagFold = async () => {
 }
 
 .blog-card-main {
-  margin: 10px 0;
+  padding: 10px 0;
+  height: auto;
 
-  .blog-img {
+  .main-blog-img {
     padding-right: 15px;
   }
+  .main-blog-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+  }
 
+  .blog-description {
+    width: 100%;
+  }
   .blog-info {
     display: flex;
-    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 
     .blog-info-user {
       display: flex;
@@ -414,6 +469,13 @@ const tagFold = async () => {
 
     .blog-info-date {
       margin: 0 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .blog-info-view {
+      display: flex;
+      align-items: center;
     }
 
     .blog-info-type {

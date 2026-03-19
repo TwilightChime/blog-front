@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <div class="animate__animated animate__fadeIn title" :key="key" :style="{'background-image': bgUrl}"></div> -->
-    <el-header>
+    <el-header :style="navbarStyle">
       <div class="nav-container">
         <div class="logo"><el-icon>
             <ElementPlus />
@@ -36,10 +36,10 @@
                       <User />
                     </el-icon>Personal
                   </el-dropdown-item>
-                  <el-dropdown-item command="settings">
+                  <el-dropdown-item command="admin">
                     <el-icon>
                       <Setting />
-                    </el-icon>Setting
+                    </el-icon>Admin
                   </el-dropdown-item>
                   <el-dropdown-item divided command="logout">
                     <el-icon>
@@ -59,11 +59,12 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ElementPlus, User, Setting, SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { useCounterStore } from '@/stores/counter'
 import { useRouter } from 'vue-router'
 import { IMG } from '@/utils/constants'
+import { eventBus } from '@/utils/eventBus'
 const router = useRouter()
 const activeIndex = ref('1')
 const stores = useCounterStore()
@@ -71,6 +72,18 @@ const stores = useCounterStore()
 const isLoggedIn = computed(() => stores.isLoggedIn)
 const username = computed(() => stores.username)
 const userInfo = computed(() => stores.userInfo || {})
+const navbarStyle = ref(null)
+
+onMounted(() => {
+  eventBus.on('navbarStyle', handleScroll)
+})
+onUnmounted(() => {
+  eventBus.off('navbarStyle', handleScroll)
+})
+
+const handleScroll = (data) => {
+  navbarStyle.value = data.data
+}
 
 const showLogin = () => {
   stores.showLoginDialog()
@@ -89,8 +102,8 @@ const handleUserCommand = (command) => {
     case 'profile':
       router.push('/profile')
       break
-    case 'settings':
-      router.push('/settings')
+    case 'admin':
+      router.push('/admin')
       break
     case 'logout':
       handleLogout()

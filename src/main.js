@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-09 13:42:18
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-12 11:17:53
+ * @LastEditTime: 2026-03-19 14:54:26
  * @FilePath: \blog-front\src\main.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,6 +17,7 @@ import 'element-plus/dist/index.css'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import * as echarts from 'echarts';
+import { filters } from './utils/filters'
 
 const app = createApp(App)
 
@@ -26,6 +27,8 @@ app.provide('$constants', {
   IMG_BASE_URL: 'http://localhost:8090/uploads/',
   UPLOAD_IMG_URL: 'http://localhost:8090/images/upload'
 })
+
+app.config.globalProperties.$filters = filters
 
 app.use(createPinia())
 app.use(router)
