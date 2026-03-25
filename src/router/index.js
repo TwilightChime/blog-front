@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-09 13:42:18
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-09 17:25:47
+ * @LastEditTime: 2026-03-24 15:35:35
  * @FilePath: \blog-front\src\router\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,6 +11,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const Client = () => import('../view/Client.vue')
 const Index = () => import('../components/front-end/Index.vue')
+const Blog = () => import('../components/front-end/Blog.vue')
 
 const AdminManagement = () => import('../view/AdminManagement.vue')
 const AdminIndex = () => import('../components/admin/Index.vue')
@@ -36,6 +37,10 @@ const router = createRouter({
         {
           path: '/index',
           component: Index,
+        },
+        {
+          path: '/blog',
+          component: Blog,
         },
       ],
     },

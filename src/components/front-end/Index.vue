@@ -2,12 +2,12 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-19 18:27:02
+ * @LastEditTime: 2026-03-25 17:00:56
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-card shadow="none" id="welcomeId" class="welcome-card" ref="welcomeRef">
+  <el-card shadow="none" id="welcomeId" class="welcome-card">
     <h1 class="welcome-title">
       欢迎来到Chimeの个人博客
       <div class="welcome-border"></div>
@@ -33,7 +33,8 @@
           </div>
           <el-row v-for="blog in blogList" :key="blog.id" class="blog-card-main">
             <el-col class="main-blog-img" :xs="24" :sm="8">
-              <el-image lazy :src="IMG.BASE_URL + blog.firstPicture" style="border-radius: 5px;flex-shrink: 0;"></el-image>
+              <el-image lazy :src="IMG.BASE_URL + blog.firstPicture"
+                style="border-radius: 5px;flex-shrink: 0;"></el-image>
             </el-col>
             <el-col class="main-blog-content" :xs="24" :sm="16" @click="getBlogInfo(blog.id)">
               <h3>{{ blog.title }}</h3>
@@ -72,9 +73,11 @@
             <b>分类</b>
           </div>
           <ul>
-            <li class="type-list" v-for="type in typeList" :key="type.id" @click="selectType(type.id)" :class="type.id === typeId ? 'activeType' : ''">
+            <li class="type-list" v-for="type in typeList" :key="type.id" @click="selectType(type.id)"
+              :class="type.id === typeId ? 'activeType' : ''">
               <div style="display: flex;align-items: center">
-                <el-image lazy :src="IMG.BASE_URL + type.pic_url" fit="cover" style="width: 28px;height: 28px;border-radius: 50%;margin-right: 10px"></el-image>
+                <el-image lazy :src="IMG.BASE_URL + type.pic_url" fit="cover"
+                  style="width: 28px;height: 28px;border-radius: 50%;margin-right: 10px"></el-image>
                 {{ type.name }}
               </div>
               <div style="margin-left: auto;">{{ type.blogs.length }}</div>
@@ -94,7 +97,8 @@
             <b>标签</b>
           </div>
           <div class="tag-view">
-            <div class="tag-list" v-for="tag in tagList" :key="tag.id" @click="selectTag(tag.id)" :class="tag.id === tagId ? 'activeTag' : ''">
+            <div class="tag-list" v-for="tag in tagList" :key="tag.id" @click="selectTag(tag.id)"
+              :class="tag.id === tagId ? 'activeTag' : ''">
               <div class="sjx-outer">
                 <div class="sjx-inner"></div>
               </div>
@@ -117,8 +121,7 @@
           <div slot="header" class="recommend-title">
             <span>最新推荐</span>
           </div>
-          <div class="recommend-list" v-for="blog in recommendBlogList" :key="blog.id"
-            @click="getBlogInfo(blog.id)">
+          <div class="recommend-list" v-for="blog in recommendBlogList" :key="blog.id" @click="getBlogInfo(blog.id)">
             <a>{{ blog.title }}</a>
           </div>
         </el-card>
@@ -135,6 +138,7 @@ import { IMG } from '@/utils/constants';
 import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Back, Clock, View, ArrowDown, ArrowUp } from '@element-plus/icons-vue'
 import { eventBus } from '@/utils/eventBus';
+import { useRouter } from 'vue-router';
 
 const blogList = ref([])
 const typeList = ref([])
@@ -145,9 +149,8 @@ const introduction = ref('')
 const isFilterBlog = ref(false)
 const titleBlog = ref('全部博客')
 
-const welcomeRef = ref(null)
 const scrollY = ref(0)
-const activeSection = ref('welcomeId')
+const isWheelScroll = ref(false)
 
 const pageNum = ref(1)
 const pageSize = ref(8)
@@ -159,17 +162,23 @@ const tagId = ref(-1)
 const notFullType = ref(true)
 const notFullTag = ref(true)
 
+const router = useRouter()
+
 onMounted(() => {
   getBlogList()
   getTypeList()
   getTagList()
   getRecommendBlogList()
   welcomeIntroTimer()
-  window.addEventListener('scroll', debouncedScroll(), { passive: true })
   handleScroll()
+  window.addEventListener('scroll', debouncedScroll, { passive: true })
+  window.addEventListener('scroll', handleScroll, {passive: false})
+  window.addEventListener('wheel', wheelScrollDown, { passive: false })  
 })
 onUnmounted(() => {
+  window.removeEventListener('scroll', debouncedScroll)
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('wheel', wheelScrollDown)
 })
 
 //数据列表获取
@@ -194,27 +203,26 @@ const getRecommendBlogList = async () => {
   recommendBlogList.value = res.data
 }
 
+//顶部导航栏背景色渐变
 const handleScroll = () => {
   scrollY.value = window.scrollY
-  const sections = ['welcomeId', 'indexId']
-  for (const section of sections) {
-    const element = document.getElementById(section)
-    if (element) {
-      const rect = element.getBoundingClientRect()
-      if (rect.top <= 100 && rect.bottom >= 100) {
-        activeSection.value = section
-        const welcomeHeight = welcomeRef.value?.offsetHeight || window.innerHeight
-        const opacity = Math.min(scrollY.value / welcomeHeight * 1.5, 0.95)
-        const blur = Math.min(scrollY.value / 100 * 5, 10)
-        eventBus.emit('navbarStyle', {
-          from: 'frontendIndex',
-          data: {backgroundColor: `rgba(0, 0, 0, ${opacity})`, backdropFilter: `blur(${blur}px)`, boxShadow: scrollY.value > 50 ? '0 2px 20px rgba(0,0,0,0.1)' : 'none'}
-        })
-        break
-      }
+  const element = document.getElementById('welcomeId')
+  if (element) {
+    const rect = element.getBoundingClientRect()
+    if (rect.top <= 100 && rect.bottom >= 100) {
+      const welcomeHeight = element.offsetHeight || window.innerHeight
+      const opacity = Math.min(scrollY.value / welcomeHeight * 0.8, 0.95)
+      const blur = Math.min(scrollY.value / 100 * 5, 10)
+      eventBus.emit('navbarStyle', {
+        from: 'frontendIndex',
+        data: { backgroundColor: `rgba(0, 0, 0, ${opacity})`, backdropFilter: `blur(${blur}px)`, boxShadow: scrollY.value > 50 ? '0 2px 20px rgba(0,0,0,0.1)' : 'none' }
+      })
     }
   }
+
 }
+
+//防抖动
 const debouncedScroll = () => {
   let timeoutId = null
   return () => {
@@ -246,10 +254,27 @@ const arrowDownBrowse = () => {
     })
   })
 }
+const wheelScrollDown = (e) => {
+  if(isWheelScroll.value) return
+  const element = document.getElementById('welcomeId')
+  if(scrollY.value < element.offsetHeight - 50 && e.deltaY > 0){
+    e.preventDefault()
+    isWheelScroll.value = true
+    nextTick(() => {
+    document.getElementById('line').scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    })
+    setTimeout(() => {
+      isWheelScroll.value = false
+    }, 800)
+  })
+  }
+}
 
 //跳转博客详情
-const getBlogInfo = async (id) => {
-
+const getBlogInfo = async (blogId) => {
+  await router.push({path: '/blog', query: {id: blogId}})
 }
 
 //博客分页
@@ -443,6 +468,7 @@ const tagFold = async () => {
   .main-blog-img {
     padding-right: 15px;
   }
+
   .main-blog-content {
     display: flex;
     flex-wrap: wrap;
@@ -452,6 +478,7 @@ const tagFold = async () => {
   .blog-description {
     width: 100%;
   }
+
   .blog-info {
     display: flex;
     align-items: center;
@@ -484,11 +511,15 @@ const tagFold = async () => {
   }
 }
 
-.right-item-type, .right-item-tag, .right-item-recommend {
+.right-item-type,
+.right-item-tag,
+.right-item-recommend {
   margin-bottom: 20px;
 }
 
-.type-title, .tag-title, .recommend-title {
+.type-title,
+.tag-title,
+.recommend-title {
   margin-bottom: 10px;
 }
 
@@ -504,6 +535,4 @@ const tagFold = async () => {
 .type-list {
   display: flex;
   margin: 10px 0;
-}
-
-</style>
+}</style>

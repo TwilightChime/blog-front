@@ -2,12 +2,12 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-22 17:58:31
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-13 14:57:15
+ * @LastEditTime: 2026-03-20 11:51:16
  * @FilePath: \blog-front\src\components\utils\DialogPic.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-dialog v-model="dialogPicVisible">
+  <el-dialog v-model="dialogPicVisible" width="70%">
     <el-upload class="upload-demo" drag :action="IMG.UPLOAD_URL" :headers="uploadHeaders" multiple>
       <el-icon><UploadFilled /></el-icon>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>

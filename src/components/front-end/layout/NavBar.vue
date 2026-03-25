@@ -10,7 +10,7 @@
         </div>
         <div class="nav-menu">
           <el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect">
-            <el-menu-item index="1">Index</el-menu-item>
+            <el-menu-item index="index">Index</el-menu-item>
             <el-menu-item index="2">Pro</el-menu-item>
             <el-menu-item index="3">About</el-menu-item>
           </el-menu>
@@ -53,7 +53,7 @@
         </div>
       </div>
     </el-header>
-    <div class="title"
+    <div v-if="currentPath === '/index'" class="title"
       :style="{ 'background-image': `url(http://localhost:8090/uploads/backgroundImage/93d8f36e-dbd5-48b0-bab0-3a145703efef..png)` }">
     </div>
   </div>
@@ -62,10 +62,11 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ElementPlus, User, Setting, SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { useCounterStore } from '@/stores/counter'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { IMG } from '@/utils/constants'
 import { eventBus } from '@/utils/eventBus'
 const router = useRouter()
+const route = useRoute()
 const activeIndex = ref('1')
 const stores = useCounterStore()
 
@@ -73,6 +74,8 @@ const isLoggedIn = computed(() => stores.isLoggedIn)
 const username = computed(() => stores.username)
 const userInfo = computed(() => stores.userInfo || {})
 const navbarStyle = ref(null)
+
+const currentPath = computed(() => route.path)
 
 onMounted(() => {
   eventBus.on('navbarStyle', handleScroll)
@@ -94,7 +97,17 @@ const showRegister = () => {
 }
 
 const handleSelect = (index) => {
-  console.log('选中菜单:', index)
+  switch (index) {
+    case 'index':
+      router.push('/index')
+      break
+    case 'admin':
+      router.push('/admin')
+      break
+    case 'logout':
+      handleLogout()
+      break
+  }
 }
 
 const handleUserCommand = (command) => {
@@ -141,8 +154,8 @@ const goToDashboard = () => {
   position: fixed;
   top: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid #404045;
+  background-color: rgba(0, 0, 0, 0.95);
+  border-bottom: 1px solid #4b4b4b;
   padding: 0;
   z-index: 1000;
 }
@@ -180,8 +193,12 @@ const goToDashboard = () => {
     background-color: rgba(0, 0, 0, 0);
 
     .el-menu-item {
-      color: #d8e0e8;
+      color: #409eff;
+      border-bottom: 2px solid var(--primary-color);
     }
+  }
+  .el-menu-item:hover {
+    background-color: var(--hover-color);
   }
 }
 
@@ -201,7 +218,7 @@ const goToDashboard = () => {
 }
 
 .user-info:hover {
-  background-color: #f5f7fa;
+  background-color: var(--hover-color);
 }
 
 .user-info .username {
