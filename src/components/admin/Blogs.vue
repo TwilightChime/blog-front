@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-12 12:49:43
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-25 14:36:04
+ * @LastEditTime: 2026-04-01 09:41:07
  * @FilePath: \blog-front\src\components\admin\Blogs.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -139,8 +139,14 @@ const acceptPic = async (data) => {
   await blogApi.getBlog(blog)
   getBlogList()
 }
-const editPic = (data) => {
-  Object.assign(blog, data)
+const editPic = (row) => {
+  row.tagIds = row.tags
+    .map((item) => {
+      return item.id
+    })
+    .toString()
+    .replace(/\[|]/g, '')
+  Object.assign(blog, row)
   eventBus.emit('dialogPicVisible', {
     from: 'blogs',
     visible: true
@@ -232,6 +238,13 @@ const tagShowInput = (row) => {
 }
 
 const editBlogById = (row) => {
+  row.tagIds = row.tags
+    .map((item) => {
+      return item.id
+    })
+    .toString()
+    .replace(/\[|]/g, '')
+  console.log(row)
   router.push({
     path: '/admin/blog-input',
     query: {

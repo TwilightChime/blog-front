@@ -2,12 +2,12 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-25 17:00:56
+ * @LastEditTime: 2026-03-26 11:29:23
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-card shadow="none" id="welcomeId" class="welcome-card">
+  <el-card shadow="never" id="welcomeId" class="welcome-card">
     <h1 class="welcome-title">
       欢迎来到Chimeの个人博客
       <div class="welcome-border"></div>

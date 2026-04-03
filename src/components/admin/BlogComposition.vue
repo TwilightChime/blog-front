@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-29 09:59:47
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-24 15:44:34
+ * @LastEditTime: 2026-04-01 09:11:14
  * @FilePath: \blog-front\src\components\admin\BlogComposition.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -78,7 +78,7 @@ const blog = reactive({
   content: '',
   flag: '',
   type: {},
-  tagIds: '',
+  tagIds: null,
   firstPicture: '',
   appreciation: 0,
   user: {},
@@ -114,6 +114,7 @@ let dialogImageUrl = ''
 onMounted(() => {
   if (route.query.blog) {
     Object.assign(blog, JSON.parse(route.query.blog))
+    console.log(blog)
   }
 })
 
