@@ -98,6 +98,7 @@ const handleLogin = async () => {
     Object.assign(user, loginForm)
     console.log(user)
     await authApi.login(user)
+    console.log(user)
     if (loginForm.rememberMe) {
       localStorage.setItem('rememberedUsername', loginForm.username)
     } else {

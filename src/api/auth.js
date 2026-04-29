@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-19 09:50:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-03 17:06:32
+ * @LastEditTime: 2026-04-09 17:55:35
  * @FilePath: \blog-front\src\api\auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,10 +10,18 @@ import request from '@/utils/request'
 import { removeToken, setToken } from '@/utils/token'
 import { useCounterStore } from '@/stores/counter'
 import { ElMessage } from 'element-plus'
+import cryptoJs from 'crypto-js'
+
+const salt = "ChillChime"
+const hashedPassword = (pwd) => {
+  return cryptoJs.SHA256(pwd + salt).toString()
+}
 
 export const authApi = {
   async login(loginForm) {
     try {
+      loginForm.password = hashedPassword(loginForm.password)
+      console.log(loginForm.password)
       const res = await request.post('/login', { user: loginForm })
       const token = res.data.data.token || res.data.data.accessToken
       const user = res.data.data.user
@@ -37,8 +45,10 @@ export const authApi = {
 
   async register(registerForm) {
     try {
+      const prevPwd = registerForm.password
+      registerForm.password = hashedPassword(registerForm.password)
       const res = await request.post('/register', { user: registerForm })
-      res.data.data.user.password = registerForm.password
+      res.data.data.user.password = prevPwd
       await this.login(res.data.data.user)
       console.log(res)
       return Promise.resolve(res)
