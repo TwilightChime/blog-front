@@ -54,7 +54,7 @@
       </div>
     </el-header>
     <div v-if="currentPath === '/index'" class="title"
-      :style="{ 'background-image': `url(http://localhost:8090/uploads/backgroundImage/93d8f36e-dbd5-48b0-bab0-3a145703efef..png)` }">
+      :style="{ 'background-image': `url(http://localhost:8080/uploads/backgroundImage/93d8f36e-dbd5-48b0-bab0-3a145703efef..png)` }">
     </div>
   </div>
 </template>

@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-26 11:29:23
+ * @LastEditTime: 2026-07-30 18:27:59
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -184,19 +184,19 @@ onUnmounted(() => {
 //数据列表获取
 const getBlogList = async () => {
   const { data: res } = await frontEndBlog.getBlogList({
-    pagenum: pageNum.value,
-    pagesize: pageSize.value
+    pageNumber: pageNum.value,
+    pageSize: pageSize.value
   })
   blogList.value = res.data.content
   totalCount.value = res.data.totalElements
 }
 const getTypeList = async () => {
   const { data: res } = await frontEndType.getTypeList()
-  typeList.value = res.data
+  typeList.value = res.data.content
 }
 const getTagList = async () => {
   const { data: res } = await frontEndTag.getTagList()
-  tagList.value = res.data
+  tagList.value = res.data.content
 }
 const getRecommendBlogList = async () => {
   const { data: res } = await frontEndBlog.getRecommendBlogList()

@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-17 14:52:26
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2025-12-29 14:58:04
+ * @LastEditTime: 2026-08-07 10:58:52
  * @FilePath: \blog-front\src\utils\request.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,7 +11,7 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 
 const service = axios.create({
-  baseURL: 'http://localhost:8090',
+  baseURL: 'http://localhost:8080',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
@@ -22,6 +22,7 @@ service.interceptors.request.use(
   (config) => {
     const stores = useCounterStore()
     config.headers.token = stores.token
+    config.headers.token = localStorage.getItem('token')
     return config
   },
   (error) => {

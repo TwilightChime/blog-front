@@ -105,8 +105,8 @@ const getBlogList = async () => {
   const res = await blogApi.getBlogList({
     title: queryBlog.title,
     typeId: queryBlog.typeId,
-    pagenum: pageNum.value,
-    pagesize: pageSize.value,
+    pageNumber: pageNum.value,
+    pageSize: pageSize.value,
   })
   blogsList.value = res.data.data.content
   totalCount.value = res.data.data.totalElements
