@@ -2,7 +2,7 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2026-01-20 18:23:06
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-02-12 18:32:19
+ * @LastEditTime: 2026-09-04 18:46:38
  * @FilePath: \blog-front\src\components\admin\Picture.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -16,7 +16,7 @@
     <Waterfall :gap="20" :col="3" :list="pictureList">
       <template #default="{item, index}">
         <div style="width: 100%;height: 100%">
-          <LazyImg :url="IMG.BASE_URL+item.src" />
+          <LazyImg :url="IMG.BASE_URL+item.file_path" />
           <span>{{item.name}}</span>
           <el-button size="small" type="danger" :icon="Delete" circle @click="delPicture(item, index)"></el-button>
         </div>

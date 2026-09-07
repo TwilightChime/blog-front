@@ -53,20 +53,16 @@
         </div>
       </div>
     </el-header>
-    <div v-if="currentPath === '/index'" class="title"
-      :style="{ 'background-image': `url(http://localhost:8080/uploads/backgroundImage/93d8f36e-dbd5-48b0-bab0-3a145703efef..png)` }">
-    </div>
   </div>
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { ElementPlus, User, Setting, SwitchButton, ArrowDown } from '@element-plus/icons-vue'
 import { useCounterStore } from '@/stores/counter'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { IMG } from '@/utils/constants'
 import { eventBus } from '@/utils/eventBus'
 const router = useRouter()
-const route = useRoute()
 const activeIndex = ref('1')
 const stores = useCounterStore()
 
@@ -74,8 +70,6 @@ const isLoggedIn = computed(() => stores.isLoggedIn)
 const username = computed(() => stores.username)
 const userInfo = computed(() => stores.userInfo || {})
 const navbarStyle = ref(null)
-
-const currentPath = computed(() => route.path)
 
 onMounted(() => {
   eventBus.on('navbarStyle', handleScroll)
@@ -197,6 +191,7 @@ const goToDashboard = () => {
       border-bottom: 2px solid var(--primary-color);
     }
   }
+
   .el-menu-item:hover {
     background-color: var(--hover-color);
   }
@@ -224,4 +219,5 @@ const goToDashboard = () => {
 .user-info .username {
   margin: 0 8px;
   font-size: 14px;
-}</style>
+}
+</style>

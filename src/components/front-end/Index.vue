@@ -2,22 +2,11 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-25 09:02:27
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-07-30 18:27:59
+ * @LastEditTime: 2026-09-04 11:07:39
  * @FilePath: \blog-front\src\components\front-end\Index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-card shadow="never" id="welcomeId" class="welcome-card">
-    <h1 class="welcome-title">
-      欢迎来到Chimeの个人博客
-      <div class="welcome-border"></div>
-    </h1>
-    <h2 class="welcome-introduction">{{ introduction }}</h2>
-    <el-icon class="welcome-arrowdown" @click="arrowDownBrowse" size="30">
-      <ArrowDown class="arrowdown-svg"></ArrowDown>
-    </el-icon>
-    <div style="position: absolute; bottom: 0%; height: 0%;" id="line"></div>
-  </el-card>
   <el-container id="indexId">
     <el-row justify="center" class="index-main">
       <el-col :xs="14" :sm="14" class="main-item-blog">
@@ -33,16 +22,17 @@
           </div>
           <el-row v-for="blog in blogList" :key="blog.id" class="blog-card-main">
             <el-col class="main-blog-img" :xs="24" :sm="8">
-              <el-image lazy :src="IMG.BASE_URL + blog.firstPicture"
-                style="border-radius: 5px;flex-shrink: 0;"></el-image>
+              <el-image lazy :src="IMG.BASE_URL + blog.firstPicture"></el-image>
             </el-col>
             <el-col class="main-blog-content" :xs="24" :sm="16" @click="getBlogInfo(blog.id)">
               <h3>{{ blog.title }}</h3>
-              <p class="blog-description">{{ blog.description }}</p>
+              <div class="blog-description">
+                <p>{{ blog.description }}</p>
+              </div>
               <div class="blog-info">
                 <div class="blog-info-user">
-                  <el-avatar size="small" :src="blog.user.avatar"></el-avatar>
-                  <a href="#" class="info-nickname">{{ blog.user.nickname }}</a>
+                  <el-avatar size="small" :src="blog?.user?.avatar"></el-avatar>
+                  <a href="#" class="info-nickname">{{ blog?.user?.nickname }}</a>
                 </div>
                 <div class="blog-info-date">
                   <el-icon style="margin-right: 2px;">
@@ -57,7 +47,7 @@
                   <span>{{ blog.views }}</span>
                 </div>
                 <div class="blog-info-type">
-                  <el-tag effect="plain">{{ blog.type.name }}</el-tag>
+                  <el-tag effect="plain">{{ blog?.type?.name }}</el-tag>
                 </div>
               </div>
             </el-col>
@@ -135,9 +125,8 @@ import { frontEndBlog } from '@/api/blog';
 import { frontEndType } from '@/api/typeApi'
 import { frontEndTag } from '@/api/tagApi'
 import { IMG } from '@/utils/constants';
-import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { Back, Clock, View, ArrowDown, ArrowUp } from '@element-plus/icons-vue'
-import { eventBus } from '@/utils/eventBus';
 import { useRouter } from 'vue-router';
 
 const blogList = ref([])
@@ -145,12 +134,8 @@ const typeList = ref([])
 const tagList = ref([])
 const recommendBlogList = ref([])
 
-const introduction = ref('')
 const isFilterBlog = ref(false)
 const titleBlog = ref('全部博客')
-
-const scrollY = ref(0)
-const isWheelScroll = ref(false)
 
 const pageNum = ref(1)
 const pageSize = ref(8)
@@ -169,16 +154,8 @@ onMounted(() => {
   getTypeList()
   getTagList()
   getRecommendBlogList()
-  welcomeIntroTimer()
-  handleScroll()
-  window.addEventListener('scroll', debouncedScroll, { passive: true })
-  window.addEventListener('scroll', handleScroll, {passive: false})
-  window.addEventListener('wheel', wheelScrollDown, { passive: false })  
 })
 onUnmounted(() => {
-  window.removeEventListener('scroll', debouncedScroll)
-  window.removeEventListener('scroll', handleScroll)
-  window.removeEventListener('wheel', wheelScrollDown)
 })
 
 //数据列表获取
@@ -203,78 +180,9 @@ const getRecommendBlogList = async () => {
   recommendBlogList.value = res.data
 }
 
-//顶部导航栏背景色渐变
-const handleScroll = () => {
-  scrollY.value = window.scrollY
-  const element = document.getElementById('welcomeId')
-  if (element) {
-    const rect = element.getBoundingClientRect()
-    if (rect.top <= 100 && rect.bottom >= 100) {
-      const welcomeHeight = element.offsetHeight || window.innerHeight
-      const opacity = Math.min(scrollY.value / welcomeHeight * 0.8, 0.95)
-      const blur = Math.min(scrollY.value / 100 * 5, 10)
-      eventBus.emit('navbarStyle', {
-        from: 'frontendIndex',
-        data: { backgroundColor: `rgba(0, 0, 0, ${opacity})`, backdropFilter: `blur(${blur}px)`, boxShadow: scrollY.value > 50 ? '0 2px 20px rgba(0,0,0,0.1)' : 'none' }
-      })
-    }
-  }
-
-}
-
-//防抖动
-const debouncedScroll = () => {
-  let timeoutId = null
-  return () => {
-    if (timeoutId) {
-      cancelAnimationFrame(timeoutId)
-    }
-    timeoutId = requestAnimationFrame(() => {
-      handleScroll()
-    })
-  }
-}
-
-//欢迎页组件
-const welcomeIntroTimer = () => {
-  let num = 0
-  let str = '这是我的个人博客、会分享关于编程，开发以及其他方面的一些内容，希望可以对您有所帮助...'
-  function timer() {
-    introduction.value = introduction.value + str.slice(num, num + 1)
-    num > str.length ? (num = 0, introduction.value = '') : num++
-    setTimeout(timer, 200)
-  }
-  setTimeout(timer, 2000)
-}
-const arrowDownBrowse = () => {
-  nextTick(() => {
-    document.getElementById('line').scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    })
-  })
-}
-const wheelScrollDown = (e) => {
-  if(isWheelScroll.value) return
-  const element = document.getElementById('welcomeId')
-  if(scrollY.value < element.offsetHeight - 50 && e.deltaY > 0){
-    e.preventDefault()
-    isWheelScroll.value = true
-    nextTick(() => {
-    document.getElementById('line').scrollIntoView({
-      behavior: 'smooth',
-      block: 'start'
-    })
-    setTimeout(() => {
-      isWheelScroll.value = false
-    }, 800)
-  })
-  }
-}
-
 //跳转博客详情
 const getBlogInfo = async (blogId) => {
-  await router.push({path: '/blog', query: {id: blogId}})
+  await router.push({ path: '/blog', query: { id: blogId } })
 }
 
 //博客分页
@@ -338,102 +246,6 @@ const tagFold = async () => {
 </script>
 
 <style scoped>
-.welcome-card {
-  position: absolute;
-  height: 100%;
-  width: 96%;
-  top: 10%;
-  left: 2%;
-  background-color: rgba(0, 0, 0, 0.1);
-  border: 0px;
-}
-
-.welcome-title {
-  position: relative;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 700px;
-  height: 100px;
-  border: 2px solid #ffff;
-  text-align: center;
-  line-height: 100px;
-  color: #ffff;
-  font-size: 40px;
-  font-weight: normal;
-  letter-spacing: 10px;
-
-  .welcome-border {
-    width: 812px;
-    height: 112px;
-    position: absolute;
-    top: -3px;
-    left: -10px;
-    border: 2px solid #ffff;
-    animation: clipMe 5s linear infinite;
-  }
-}
-
-.welcome-introduction {
-  position: relative;
-  top: 20%;
-  text-align: center;
-  color: #ffff;
-}
-
-.welcome-arrowdown {
-  position: absolute;
-  left: 50%;
-  bottom: 20%;
-  transform: translate(-50%, 0) scale(2);
-  border: 1px solid rgb(255, 255, 255, 0.9);
-  border-radius: 50%;
-
-  .arrowdown-svg {
-    transform: translate(0, 5%) scale(0.5);
-    color: rgb(255, 255, 255, 0.9);
-  }
-}
-
-@keyframes clipMe {
-
-  0%,
-  100% {
-    clip: rect(0px, 806px, 6px, 0px);
-  }
-
-  25% {
-    clip: rect(0px, 6px, 112px, 0px);
-  }
-
-  50% {
-    clip: rect(112px, 812px, 112px, 0px);
-  }
-
-  75% {
-    clip: rect(0px, 812px, 112px, 806px);
-  }
-}
-
-@keyframes bounce {
-
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-
-  40% {
-    transform: translate(-50%, -30px);
-  }
-
-  60% {
-    transform: translate(-50%, -15px);
-  }
-}
-
 .index-main {
   min-width: 100%;
   margin-top: 10px;
@@ -466,17 +278,55 @@ const tagFold = async () => {
   height: auto;
 
   .main-blog-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 5px;
     padding-right: 15px;
+
+    .el-image {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    :deep(.el-image__inner) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
   }
 
   .main-blog-content {
+    width: 100%;
+    height: 150px;
+    aspect-ratio: 5 / 1;
     display: flex;
     flex-wrap: wrap;
     align-content: space-between;
+
+    h3 {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      word-break: break-all;
+    }
   }
 
   .blog-description {
     width: 100%;
+    height: 100px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    word-break: break-all;
   }
 
   .blog-info {
@@ -535,4 +385,5 @@ const tagFold = async () => {
 .type-list {
   display: flex;
   margin: 10px 0;
-}</style>
+}
+</style>

@@ -18,6 +18,12 @@ body {
   min-height: 100vh;
 }
 
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 :root {
   /* 定义颜色变量 */
   --primary-color: #3498db;

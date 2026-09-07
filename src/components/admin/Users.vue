@@ -62,6 +62,10 @@ const inputUser = ref('')
 const stores = useCounterStore()
 const userInfo = ref(stores.userInfo)
 
+onMounted(() => {
+  getUserList()
+})
+
 const getUserList = async () => {
   const {data: res} = await authApi.getUserList()
   if (res.code === 200) {
@@ -112,8 +116,4 @@ const deleteUser = (id) => {
     }
   }).catch(err => err)
 }
-
-onMounted(() => {
-  getUserList()
-})
 </script>
