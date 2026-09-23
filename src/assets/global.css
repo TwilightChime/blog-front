@@ -32,11 +32,12 @@ img {
   --bg-color: #f5f5f5;
 
   /* 夜间主题变量 */
-  --bg-darker: #0a0a0a;
-  --bg-dark: #141414;
-  --bg-card: #1f1f1f;
-  --hover-color: #262626;
-  --border-dark: #303030;
+  --bg-darker: #0e0e0e;
+  --bg-dark: #1f1f1f;
+  --bg-card: #2f2f2f;
+  --bg-area: #3f3f3f;
+  --hover-color: #4f4f4f;
+  --border-dark: #5f5f5f;
   --text-light: #e0e0e0;
   --text-lighter: #ffffff;
   /* --primary-color: #409eff; */

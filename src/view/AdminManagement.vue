@@ -2,14 +2,14 @@
  * @Author: TwilightChime 403685461@qq.com
  * @Date: 2025-12-11 16:51:12
  * @LastEditors: TwilightChime 403685461@qq.com
- * @LastEditTime: 2026-03-13 14:43:28
+ * @LastEditTime: 2026-09-20 18:30:03
  * @FilePath: \blog-front\src\view\AdminManagement.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <el-container class="admin-container">
-    <el-header class="admin-header">
-      <div class="logo">
+  <el-container class="admin">
+    <el-header class="admin__header">
+      <div class="header__logo">
         <div @click="toggleCollapse">|||</div>
         <span>BlogManagementAdmin</span>
       </div>
@@ -127,13 +127,14 @@ const handleLogout = async () => {
 </script>
 
 <style scoped>
-.admin-container {
+.admin {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--bg-dark);
 }
 
-.admin-header {
+.admin__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -142,19 +143,23 @@ const handleLogout = async () => {
   border-bottom: 1px solid var(--border-dark);
   flex-shrink: 0;
 
-  .logo {
+  .header__logo {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--text-light);
+    color: var(--primary-color);
 
     >div {
       cursor: pointer;
       margin-right: 10px;
 
       & :hover {
-        background-color: aqua;
+        color: var(--primary-color);
       }
+    }
+
+    >span {
+      color: var(--primary-color);
     }
   }
 
@@ -180,6 +185,7 @@ const handleLogout = async () => {
     .user-info .username {
       margin: 0 8px;
       font-size: 14px;
+      color: var(--text-light);
     }
   }
 }
